@@ -36,7 +36,9 @@ func _update_display():
 	proton_label.text = "H+: " + str(compartment_node.protons)
 
 	if compartment_node.electrochemical_field and membrane_potential_label:
-		var potential = compartment_node.electrochemical_field.calculate_resting_potential()
+		# Get blood compartment reference for accurate voltage calculation
+		var blood_compartment = CompartmentRegistry.get_compartment("kidney.pct.blood")
+		var potential = compartment_node.electrochemical_field.calculate_resting_potential(blood_compartment)
 		membrane_potential_label.text = "Membrane Potential: %.1f mV" % potential
 
 func _on_state_changed(state):

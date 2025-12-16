@@ -120,7 +120,8 @@ func calculate_osmolality() -> float:
 ## Calculate resting membrane potential (mV) using Goldman-Hodgkin-Katz equation
 ## Accounts for K+, Na+, and Cl- permeabilities
 ## Realistic PCT cells have ~-70 mV resting potential
-func calculate_resting_potential() -> float:
+## Pass external_compartment to use actual extracellular values instead of defaults
+func calculate_resting_potential(external_compartment = null) -> float:
 	if not parent_compartment or volume == 0.0:
 		return 0.0
 
@@ -129,10 +130,15 @@ func calculate_resting_potential() -> float:
 	var na_in = get_ion_concentration("na")  # ~12 mM
 	var cl_in = get_ion_concentration("cl")  # ~7 mM
 
-	# Assume typical extracellular concentrations (mM)
-	var k_out = 5.0      # mM
-	var na_out = 140.0   # mM
-	var cl_out = 110.0   # mM
+	# Get extracellular concentrations - use actual blood compartment if available
+	var k_out = 5.0      # mM (default)
+	var na_out = 140.0   # mM (default)
+	var cl_out = 110.0   # mM (default)
+
+	if external_compartment and external_compartment.electrochemical_field:
+		k_out = external_compartment.electrochemical_field.get_ion_concentration("k")
+		na_out = external_compartment.electrochemical_field.get_ion_concentration("na")
+		cl_out = external_compartment.electrochemical_field.get_ion_concentration("cl")
 
 	if k_in <= 0 or na_in <= 0 or cl_in <= 0:
 		return 0.0

@@ -322,8 +322,11 @@ This is true simulation, not animation.
 - ✅ GHK equation accounts for K+, Na+, and Cl- permeabilities
 - ✅ **Blood compartment implemented with full display**
 - ✅ **Generic compartment interface pattern working**
+- ✅ **Global CompartmentRegistry for cross-system compartment references**
+- ✅ **Na-K-ATPase functional with ion transport and voltage changes**
+- ✅ **Interactive receptor activation system with UI**
 - ⏳ Lumen compartment not yet implemented
-- ⏳ Transporters not yet moving particles
+- ⏳ Other transporters (SGLT2, NHE3, etc.) not yet implemented
 
 **Membrane Potential Details:**
 - Uses Goldman-Hodgkin-Katz (GHK) equation for physiological accuracy
@@ -391,3 +394,105 @@ The display manager is now **completely decoupled** from specific compartment ty
 - ANY future compartment that implements the interface
 
 This is true interface-based programming - no class inheritance, just structural contracts.
+
+---
+
+### Completed: CompartmentRegistry & Functional Ion Transport (2025-12-16)
+
+**Files Created:**
+- `General/compartment_registry.gd` - Global autoload singleton for compartment management
+- `General/channels/na_k_at_pase.gd` - Functional Na-K-ATPase transporter
+- `General/channels/activate_receptor_button.gd` - UI button for activating selected channels
+
+**Files Modified:**
+- `project.godot` - Added CompartmentRegistry autoload
+- `Kidney/Scripts/Nephron/pct_cell.gd` - Registers with CompartmentRegistry as "kidney.pct.cell"
+- `Kidney/Scripts/Nephron/nephron_blood_vessel.gd` - Registers as "kidney.pct.blood"
+- `Kidney/Scripts/Nephron/utilities/electrochemical_field.gd` - GHK equation now uses actual blood compartment
+- `Kidney/Scripts/Nephron/pct/pct_solute_display_manager.gd` - Passes blood compartment for voltage calculation
+- `Kidney/Data/Nephron/pct_channels.json` - Updated Na_K_ATPase transport definitions with registry IDs
+- `General/channels/ion_channel.gd` - Added activate() function with pulse animation
+
+**What Was Built:**
+
+1. **Global Compartment Registry** (`compartment_registry.gd`)
+   - Autoload singleton accessible from anywhere in the project
+   - Manages all physiological compartments across all organ systems
+   - Methods:
+     - `register(id, compartment)` - Register with full ID (e.g., "kidney.pct.lumen")
+     - `register_scoped(scope, location, compartment)` - Auto-namespacing (e.g., "kidney.pct", "lumen")
+     - `get_compartment(id)` - Retrieve compartment reference by ID
+     - `has_compartment(id)` - Check if compartment exists
+     - `unregister(id)` - Remove compartment (cleanup)
+   - **Namespace pattern**: `organ.substructure.compartment_type`
+     - Examples: "kidney.pct.cell", "kidney.pct.blood", "heart.left_ventricle.blood"
+   - Decouples transporters from hardcoded node paths
+   - Enables JSON-driven compartment references
+
+2. **Functional Na-K-ATPase** (`na_k_at_pase.gd`)
+   - Extends IonChannel base class
+   - Retrieves cell and blood compartments from registry
+   - Moves ions on activation:
+     - 3 Na+ from cell → blood
+     - 2 K+ from blood → cell
+     - Updates both display values and actual particle counts
+   - Scaled to 10^6 pump cycles per activation (physiologically representative)
+   - Emits `concentrations_updated` signals to update UI
+   - Includes pulse animation via `super.activate()`
+
+3. **Improved Voltage Calculation**
+   - `calculate_resting_potential()` now accepts `external_compartment` parameter
+   - Reads actual K+, Na+, Cl- from blood compartment instead of hardcoded values
+   - GHK equation now reflects changes in BOTH cell and blood compartments
+   - Voltage changes are more noticeable because:
+     - Cell K+ increases as pumps move K+ in
+     - Blood K+ decreases as pumps extract K+ from blood
+     - Both sides of the equation change simultaneously
+   - Display manager passes blood compartment reference for accurate voltage
+
+4. **Interactive Activation System**
+   - Activate button in InfoPanel
+   - Auto-finds NephronSelectionManager (3 levels up, then down via Nephron/NephronSelectionManager)
+   - Connects to `channel_selected` and `channel_deselected` signals
+   - Calls `activate()` on currently selected channel/receptor
+   - Button disabled when no channel selected
+
+5. **Channel Activation Animation**
+   - IonChannel base class has `activate()` function
+   - Creates tween-based pulse animation (scale up 1.3x, then back to original)
+   - Stores `original_scale` in `_ready()` to prevent compound scaling
+   - Kills previous tween before starting new one (prevents stacking on spam-click)
+   - 0.4 second animation (0.2s up, 0.2s down)
+
+6. **JSON-Driven Transport Definitions**
+   - `pct_channels.json` updated with registry IDs:
+     ```json
+     {
+       "substrate": "Na+",
+       "source": "kidney.pct.cell",
+       "destination": "kidney.pct.blood",
+       "quantity": 3
+     }
+     ```
+   - Future transporters can read from JSON and use registry to find compartments
+   - Decouples transport logic from scene structure
+
+**Architecture Benefits:**
+- **Cross-system compatibility**: Same registry works for kidney, heart, uterus, etc.
+- **JSON-driven configuration**: Transport definitions reference compartments by ID, not node paths
+- **Runtime flexibility**: Compartments can be added/removed dynamically
+- **Debugging**: `get_all_ids()` method lists all registered compartments
+- **Decoupling**: Transporters don't need to know scene tree structure
+
+**Physiological Validation:**
+- Na-K-ATPase moving 3M Na+ and 2M K+ per activation
+- Cell has ~14.4 billion Na+ ions (12 mM in 2 pL)
+- Each activation moves 0.02% of cell Na+ pool
+- Voltage changes from -70.14 mV → -70.15 mV per activation
+- Continuous pumping would be needed for significant physiological effect
+
+**Next Steps:**
+1. Implement continuous/automatic pumping driven by ATP availability
+2. Add SGLT2, NHE3, and other transporters from JSON
+3. Create lumen compartment and register as "kidney.pct.lumen"
+4. Scale simulation to represent realistic time (e.g., 1 activation = 1 second of pumping)

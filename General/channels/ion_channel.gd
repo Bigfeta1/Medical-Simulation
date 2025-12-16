@@ -16,8 +16,12 @@ enum EpithelialPolarity {
 var outline_material: ShaderMaterial
 var selection_manager
 var is_selected: bool = false
+var active_tween: Tween = null
+var original_scale: Vector3
 
 func _ready():
+	original_scale = scale
+
 	selection_manager = get_node("/root/Main/Kidney/Nephron/NephronSelectionManager")
 	selection_manager.register(self)
 
@@ -60,10 +64,13 @@ func deselect():
 	material_override = null
 
 func activate():
+	# Kill any existing tween to prevent stacking
+	if active_tween:
+		active_tween.kill()
+
 	# Pulse animation: scale up and back down
-	var original_scale = scale
-	var tween = create_tween()
-	tween.set_trans(Tween.TRANS_QUAD)
-	tween.set_ease(Tween.EASE_IN_OUT)
-	tween.tween_property(self, "scale", original_scale * 1.3, 0.2)
-	tween.tween_property(self, "scale", original_scale, 0.2)
+	active_tween = create_tween()
+	active_tween.set_trans(Tween.TRANS_QUAD)
+	active_tween.set_ease(Tween.EASE_IN_OUT)
+	active_tween.tween_property(self, "scale", original_scale * 1.3, 0.2)
+	active_tween.tween_property(self, "scale", original_scale, 0.2)

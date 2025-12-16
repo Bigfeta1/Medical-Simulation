@@ -38,6 +38,8 @@ func _ready():
 	if electrochemical_field:
 		electrochemical_field.volume = volume
 
+	CompartmentRegistry.register_scoped("kidney.pct", "blood", self)
+
 	_initialize_concentrations()
 
 func _initialize_concentrations():

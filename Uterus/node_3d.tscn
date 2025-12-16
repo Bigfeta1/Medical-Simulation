@@ -133,7 +133,6 @@ material_override = SubResource("StandardMaterial3D_507ss")
 mesh = SubResource("TorusMesh_dr4th")
 skeleton = NodePath("../../../..")
 script = ExtResource("3_n5f4h")
-debug_mode = true
 
 [node name="ElectrochemicalField" type="Node3D" parent="Kidney/Nephron/PCT/BloodVessel"]
 transform = Transform3D(1, 0, 0, 0, 1.0000001, 0, 0, 0, 1, 1.9787121, 0.6158239, 0)
@@ -243,7 +242,6 @@ no_depth_test = true
 sprite_frames = SubResource("SpriteFrames_rls6d")
 frame_progress = 0.32499108
 script = ExtResource("4_x2dpx")
-debug_mode = true
 
 [node name="ElectrochemicalField" type="Node3D" parent="Kidney/Nephron/PCT/PCTCell"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9787128, 0.61582386, 0)

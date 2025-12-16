@@ -98,19 +98,19 @@
 			"transports": [
 				{
 					"substrate": "Na+",
-					"source": "cell",
-					"destination": "blood",
+					"source": "kidney.pct.cell",
+					"destination": "kidney.pct.blood",
 					"quantity": 3
 				},
 				{
 					"substrate": "K+",
-					"source": "blood",
-					"destination": "cell",
+					"source": "kidney.pct.blood",
+					"destination": "kidney.pct.cell",
 					"quantity": 2
 				},
 				{
 					"substrate": "ATP",
-					"source": "cell",
+					"source": "kidney.pct.cell",
 					"destination": "consumed",
 					"quantity": 1
 				}
