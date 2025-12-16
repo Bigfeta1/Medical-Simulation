@@ -49,23 +49,49 @@ func calculate_total_charge() -> float:
 	return total_charge
 
 ## Calculate membrane potential between this compartment and another
-## Using simplified Nernst-like calculation based on charge imbalance
+## Uses Goldman-Hodgkin-Katz equation with ion concentrations and permeabilities
+## this compartment = intracellular, other_field = extracellular
 func calculate_potential_difference(other_field: ElectrochemicalField) -> float:
-	var charge_here = calculate_total_charge()
-	var charge_there = other_field.calculate_total_charge()
-
-	if charge_here == 0.0 or charge_there == 0.0:
+	if not parent_compartment or volume == 0.0:
+		return 0.0
+	if not other_field or not other_field.parent_compartment or other_field.volume == 0.0:
 		return 0.0
 
-	# Simplified potential calculation (mV)
-	# Real membrane potential would use Goldman-Hodgkin-Katz equation
-	# For now: V ≈ (RT/F) * ln(charge_ratio)
-	var ratio = abs(charge_there / charge_here)
-	var potential_volts = (GAS_CONSTANT * TEMPERATURE / FARADAY_CONSTANT) * log(ratio)
-	var potential_mv = potential_volts * 1000.0
+	# Get intracellular concentrations (this compartment)
+	var k_in = get_ion_concentration("k")
+	var na_in = get_ion_concentration("na")
+	var cl_in = get_ion_concentration("cl")
 
-	# Sign convention: positive if charge_here < charge_there
-	return potential_mv if charge_here < charge_there else -potential_mv
+	# Get extracellular concentrations (other compartment)
+	var k_out = other_field.get_ion_concentration("k")
+	var na_out = other_field.get_ion_concentration("na")
+	var cl_out = other_field.get_ion_concentration("cl")
+
+	if k_in <= 0 or na_in <= 0 or cl_in <= 0:
+		return 0.0
+	if k_out <= 0 or na_out <= 0 or cl_out <= 0:
+		return 0.0
+
+	# Relative membrane permeabilities at rest
+	# P_K : P_Na : P_Cl ≈ 1.0 : 0.04 : 0.45
+	var p_k = 1.0
+	var p_na = 0.04
+	var p_cl = 0.45
+
+	# Goldman-Hodgkin-Katz equation:
+	# V_m = (RT/F) * ln((P_K*[K+]out + P_Na*[Na+]out + P_Cl*[Cl-]in) / (P_K*[K+]in + P_Na*[Na+]in + P_Cl*[Cl-]out))
+	# Note: Cl- is inverted (in/out swapped) because it's an anion
+
+	var numerator = (p_k * k_out) + (p_na * na_out) + (p_cl * cl_in)
+	var denominator = (p_k * k_in) + (p_na * na_in) + (p_cl * cl_out)
+
+	if denominator <= 0:
+		return 0.0
+
+	# At 37°C: (RT/F) ≈ 26.7 mV, convert to log10: 26.7 * ln(10) ≈ 61.5 mV
+	var potential_mv = 61.5 * log(numerator / denominator) / log(10)
+
+	return potential_mv
 
 ## Calculate concentration of a specific ion (mM = mmol/L)
 ## Uses actual particle counts (not debug-scaled values)

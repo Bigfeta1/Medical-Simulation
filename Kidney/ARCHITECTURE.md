@@ -22,23 +22,23 @@ Individual ions and molecules exist as distinct entities:
 **Particle Behavior:**
 ```gdscript
 class IonParticle:
-    var position: Vector3
-    var velocity: Vector3
-    var charge: float
+	var position: Vector3
+	var velocity: Vector3
+	var charge: float
 
-    func _physics_process(delta):
-        # Calculate forces from ALL nearby charged particles
-        var electric_field = calculate_coulomb_forces()
+	func _physics_process(delta):
+		# Calculate forces from ALL nearby charged particles
+		var electric_field = calculate_coulomb_forces()
 
-        # Brownian motion (thermal diffusion)
-        var brownian = random_thermal_motion()
+		# Brownian motion (thermal diffusion)
+		var brownian = random_thermal_motion()
 
-        # Bulk flow (tubular fluid movement)
-        var flow = get_local_flow_velocity()
+		# Bulk flow (tubular fluid movement)
+		var flow = get_local_flow_velocity()
 
-        # Update motion
-        velocity += (electric_field + brownian + flow) * delta
-        position += velocity * delta
+		# Update motion
+		velocity += (electric_field + brownian + flow) * delta
+		position += velocity * delta
 ```
 
 **Key Point:** Particles don't "know" about concentration gradients. They only respond to:
@@ -112,17 +112,29 @@ func cotransport_cycle():
 
 These are **calculated outputs**, not inputs:
 
-#### **Electronegativity**
+#### **Electronegativity (Membrane Potential)**
 ```gdscript
-func calculate_membrane_potential(compartment_a, compartment_b):
-    var charge_a = sum_all_particle_charges(compartment_a)
-    var charge_b = sum_all_particle_charges(compartment_b)
+func calculate_membrane_potential(intracellular_field, extracellular_field):
+    # Get ion concentrations from both compartments
+    var k_in = intracellular_field.get_ion_concentration("k")
+    var na_in = intracellular_field.get_ion_concentration("na")
+    var cl_in = intracellular_field.get_ion_concentration("cl")
 
-    # Nernst-like calculation based on actual charge distribution
-    return CONSTANT * log(charge_a / charge_b)
+    var k_out = extracellular_field.get_ion_concentration("k")
+    var na_out = extracellular_field.get_ion_concentration("na")
+    var cl_out = extracellular_field.get_ion_concentration("cl")
+
+    # Goldman-Hodgkin-Katz equation with permeability weighting
+    # P_K : P_Na : P_Cl = 1.0 : 0.04 : 0.45
+    var numerator = (1.0 * k_out) + (0.04 * na_out) + (0.45 * cl_in)
+    var denominator = (1.0 * k_in) + (0.04 * na_in) + (0.45 * cl_out)
+
+    return 61.5 * log(numerator / denominator) / log(10)  # mV
 ```
 
-The Na-K-ATPase creates electronegativity **by physically moving charged particles**, not by "setting voltage."
+**Critical Physics:** Membrane potential comes from **ion concentration gradients** weighted by **membrane permeabilities**, NOT from total charge differences. Compartments remain nearly electroneutral (charge difference ~10^-6 of total ions), but concentration gradients create voltage via selective ion flow.
+
+The Na-K-ATPase creates voltage **by changing ion concentration gradients** (moving Na+ out, K+ in), which shifts the GHK equation output, not by creating charge imbalance.
 
 #### **Concentration**
 ```gdscript
@@ -272,13 +284,14 @@ This is true simulation, not animation.
 1. **ElectrochemicalField Class** (`electrochemical_field.gd`)
    - Calculates emergent electrochemical properties from ion particle counts
    - Methods:
-     - `calculate_total_charge()` - Sums charges from all ions in compartment
-     - `calculate_potential_difference(other_field)` - Membrane potential between two compartments
+     - `calculate_total_charge()` - Sums charges from all ions in compartment (for debugging/validation)
+     - `calculate_potential_difference(other_field)` - GHK membrane potential between two compartments
      - `get_ion_concentration(ion_name)` - Converts particle counts to mM concentrations
      - `calculate_osmolality()` - Total osmotic pressure from all particles
-     - `calculate_resting_potential()` - Goldman-Hodgkin-Katz equation (-70.1 mV)
+     - `calculate_resting_potential(external_compartment)` - Goldman-Hodgkin-Katz equation (-70.1 mV)
    - Uses physical constants (Faraday, Gas constant, body temperature)
    - All calculations use actual particle counts, not debug-scaled values
+   - **Physics:** Voltage calculated from ion concentration gradients and permeabilities (GHK), not charge imbalance
 
 2. **PCT Cell Compartment** (`pct_cell.gd`)
    - Physiologically accurate intracellular ion concentrations:
@@ -496,3 +509,65 @@ This is true interface-based programming - no class inheritance, just structural
 2. Add SGLT2, NHE3, and other transporters from JSON
 3. Create lumen compartment and register as "kidney.pct.lumen"
 4. Scale simulation to represent realistic time (e.g., 1 activation = 1 second of pumping)
+
+---
+
+### Completed: Fixed Voltage Calculation Physics (2025-12-16)
+
+**Files Modified:**
+- `Kidney/Scripts/Nephron/utilities/electrochemical_field.gd` - Fixed `calculate_potential_difference()`
+- `Kidney/ARCHITECTURE.md` - Updated physics documentation
+
+**What Was Fixed:**
+
+**The Problem:**
+The original `calculate_potential_difference()` function used incorrect physics:
+```gdscript
+# WRONG - used total charge ratio
+var ratio = abs(charge_there / charge_here)
+var potential_mv = (RT/F) * log(ratio)
+```
+
+This was fundamentally flawed because:
+1. Compartments remain nearly **electroneutral** (total charge ≈ 0)
+2. Charge imbalance is ~10^-6 of total ions, ratio would be ~1.0
+3. Membrane potential comes from **ion concentration gradients** and **permeabilities**, not total charge
+4. Would give nonsensical results as ions moved between compartments
+
+**The Fix:**
+Rewrote function to use **Goldman-Hodgkin-Katz equation** with proper physics:
+```gdscript
+# Get ion concentrations from both compartments
+var k_in = get_ion_concentration("k")
+var na_in = get_ion_concentration("na")
+var cl_in = get_ion_concentration("cl")
+
+var k_out = other_field.get_ion_concentration("k")
+var na_out = other_field.get_ion_concentration("na")
+var cl_out = other_field.get_ion_concentration("cl")
+
+# GHK equation with permeability weighting
+# P_K : P_Na : P_Cl = 1.0 : 0.04 : 0.45
+var numerator = (p_k * k_out) + (p_na * na_out) + (p_cl * cl_in)
+var denominator = (p_k * k_in) + (p_na * na_in) + (p_cl * cl_out)
+
+var potential_mv = 61.5 * log(numerator / denominator) / log(10)
+```
+
+**Key Physics Principles:**
+1. **Electroneutrality**: Compartments maintain near-zero net charge (anions ≈ cations)
+2. **Selective Permeability**: Membrane lets K+ through easily (P_K = 1.0), Na+ barely (P_Na = 0.04), Cl- moderately (P_Cl = 0.45)
+3. **Concentration Gradients**: High K+ inside vs. outside drives voltage negative
+4. **GHK Weighting**: Each ion's contribution weighted by its permeability
+5. **Voltage Source**: Comes from gradient × permeability, not charge separation
+
+**Why This Matters:**
+- Moving 3M Na+ ions barely changes total charge (still ~electroneutral)
+- But it **does** change Na+ concentration gradient
+- GHK correctly captures this gradient change and updates voltage
+- Voltage now tracks ion movements accurately even in electroneutral compartments
+
+**Validation:**
+- Both `calculate_potential_difference()` and `calculate_resting_potential()` now use identical GHK physics
+- Voltage responds to ion movements in both cell and blood compartments
+- Compartments remain electroneutral while maintaining physiological voltages (-70 mV)
