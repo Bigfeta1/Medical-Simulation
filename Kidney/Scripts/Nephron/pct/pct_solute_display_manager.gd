@@ -1,7 +1,7 @@
 extends Node
 
 @onready var kidney = get_node("/root/Main/Kidney")
-@onready var pct_cell = get_parent().get_parent()  # SoluteDisplay -> PCTCell
+@onready var compartment_node = get_parent().get_parent()  # SoluteDisplay -> Compartment (BloodVessel or PCTCell)
 
 ##Labels - Column1 and Column2 under parent (SoluteDisplay)
 @onready var sodium_label = get_parent().get_node("Column1/VBoxContainer/Electrolytes/SodiumLabel")
@@ -18,25 +18,25 @@ extends Node
 
 func _ready():
 	kidney.state_changed.connect(_on_state_changed)
-	pct_cell.concentrations_updated.connect(_update_display)
+	compartment_node.concentrations_updated.connect(_update_display)
 
 	var state = kidney.current_display_state
 	if state == kidney.SelectionState.PCT:
 		_update_display()
 
 func _update_display():
-	sodium_label.text = "Sodium: " + str(pct_cell.sodium)
-	potassium_label.text = "Potassium: " + str(pct_cell.potassium)
-	chloride_label.text = "Chloride: " + str(pct_cell.chloride)
-	glucose_label.text = "Glucose: " + str(pct_cell.glucose)
-	amino_acid_label.text = "Amino Acids: " + str(pct_cell.amino_acids)
+	sodium_label.text = "Sodium: " + str(compartment_node.sodium)
+	potassium_label.text = "Potassium: " + str(compartment_node.potassium)
+	chloride_label.text = "Chloride: " + str(compartment_node.chloride)
+	glucose_label.text = "Glucose: " + str(compartment_node.glucose)
+	amino_acid_label.text = "Amino Acids: " + str(compartment_node.amino_acids)
 
-	water_label.text = "H20: " + str(pct_cell.water)
-	carbon_dioxide_label.text = "CO2: " + str(pct_cell.water)
-	proton_label.text = "H+: " + str(pct_cell.protons)
+	water_label.text = "H20: " + str(compartment_node.water)
+	carbon_dioxide_label.text = "CO2: " + str(compartment_node.water)
+	proton_label.text = "H+: " + str(compartment_node.protons)
 
-	if pct_cell.electrochemical_field and membrane_potential_label:
-		var potential = pct_cell.electrochemical_field.calculate_resting_potential()
+	if compartment_node.electrochemical_field and membrane_potential_label:
+		var potential = compartment_node.electrochemical_field.calculate_resting_potential()
 		membrane_potential_label.text = "Membrane Potential: %.1f mV" % potential
 
 func _on_state_changed(state):

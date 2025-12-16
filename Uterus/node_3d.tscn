@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://byoqlrob0vm10"]
+[gd_scene load_steps=32 format=3 uid="uid://byoqlrob0vm10"]
 
 [ext_resource type="Texture2D" uid="uid://cytfkheigffsc" path="res://Kidney/Assets/Nephron/PCT/PCT_base1.png" id="1_8apwo"]
 [ext_resource type="Script" uid="uid://c5vwawa4eq3fw" path="res://Kidney/Scripts/kidney.gd" id="1_nx5q5"]
@@ -25,6 +25,9 @@
 albedo_color = Color(0.5302961, 0.050957, 0.12168456, 1)
 
 [sub_resource type="TorusMesh" id="TorusMesh_dr4th"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_n5f4h"]
+font_size = 10
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_rls6d"]
 animations = [{
@@ -130,6 +133,108 @@ material_override = SubResource("StandardMaterial3D_507ss")
 mesh = SubResource("TorusMesh_dr4th")
 skeleton = NodePath("../../../..")
 script = ExtResource("3_n5f4h")
+
+[node name="ElectrochemicalField" type="Node3D" parent="Kidney/Nephron/PCT/BloodVessel"]
+transform = Transform3D(1, 0, 0, 0, 1.0000001, 0, 0, 0, 1, 1.9787121, 0.6158239, 0)
+script = ExtResource("6_rjkdb")
+
+[node name="SoluteDisplay" type="Control" parent="Kidney/Nephron/PCT/BloodVessel"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 1786.0
+offset_top = 345.0
+offset_right = 1826.0
+offset_bottom = 385.0
+
+[node name="Solute_Display_Manager" type="Node" parent="Kidney/Nephron/PCT/BloodVessel/SoluteDisplay"]
+script = ExtResource("14_pfbj3")
+
+[node name="Column1" type="VBoxContainer" parent="Kidney/Nephron/PCT/BloodVessel/SoluteDisplay"]
+layout_mode = 0
+offset_left = 6.0
+offset_top = -125.0
+offset_right = 87.0
+offset_bottom = 131.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Kidney/Nephron/PCT/BloodVessel/SoluteDisplay/Column1"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Electrolytes" type="VBoxContainer" parent="Kidney/Nephron/PCT/BloodVessel/SoluteDisplay/Column1/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="SodiumLabel" type="Label" parent="Kidney/Nephron/PCT/BloodVessel/SoluteDisplay/Column1/VBoxContainer/Electrolytes"]
+layout_mode = 2
+text = "Sodium"
+label_settings = SubResource("LabelSettings_n5f4h")
+
+[node name="PotassiumLabel" type="Label" parent="Kidney/Nephron/PCT/BloodVessel/SoluteDisplay/Column1/VBoxContainer/Electrolytes"]
+layout_mode = 2
+text = "Potassium"
+label_settings = SubResource("LabelSettings_n5f4h")
+
+[node name="ChlorideLabel" type="Label" parent="Kidney/Nephron/PCT/BloodVessel/SoluteDisplay/Column1/VBoxContainer/Electrolytes"]
+layout_mode = 2
+text = "Chloride"
+label_settings = SubResource("LabelSettings_n5f4h")
+
+[node name="LargeComponents" type="VBoxContainer" parent="Kidney/Nephron/PCT/BloodVessel/SoluteDisplay/Column1/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="GlucoseLabel" type="Label" parent="Kidney/Nephron/PCT/BloodVessel/SoluteDisplay/Column1/VBoxContainer/LargeComponents"]
+layout_mode = 2
+text = "Sodium"
+label_settings = SubResource("LabelSettings_n5f4h")
+
+[node name="AminoAcidLabel" type="Label" parent="Kidney/Nephron/PCT/BloodVessel/SoluteDisplay/Column1/VBoxContainer/LargeComponents"]
+layout_mode = 2
+text = "Potassium"
+label_settings = SubResource("LabelSettings_n5f4h")
+
+[node name="AcidBase" type="VBoxContainer" parent="Kidney/Nephron/PCT/BloodVessel/SoluteDisplay/Column1/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="WaterLabel" type="Label" parent="Kidney/Nephron/PCT/BloodVessel/SoluteDisplay/Column1/VBoxContainer/AcidBase"]
+layout_mode = 2
+text = "Sodium"
+label_settings = SubResource("LabelSettings_n5f4h")
+
+[node name="CarbonDioxideLabel" type="Label" parent="Kidney/Nephron/PCT/BloodVessel/SoluteDisplay/Column1/VBoxContainer/AcidBase"]
+layout_mode = 2
+text = "Sodium"
+label_settings = SubResource("LabelSettings_n5f4h")
+
+[node name="AcidBase2" type="VBoxContainer" parent="Kidney/Nephron/PCT/BloodVessel/SoluteDisplay/Column1/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="ProtonLabel" type="Label" parent="Kidney/Nephron/PCT/BloodVessel/SoluteDisplay/Column1/VBoxContainer/AcidBase2"]
+layout_mode = 2
+text = "H+"
+label_settings = SubResource("LabelSettings_n5f4h")
+
+[node name="Column2" type="VBoxContainer" parent="Kidney/Nephron/PCT/BloodVessel/SoluteDisplay"]
+layout_mode = 0
+offset_left = 7.0
+offset_top = 214.0
+offset_right = 88.0
+offset_bottom = 470.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Kidney/Nephron/PCT/BloodVessel/SoluteDisplay/Column2"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Electrochemical" type="VBoxContainer" parent="Kidney/Nephron/PCT/BloodVessel/SoluteDisplay/Column2/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="VoltageLabel" type="Label" parent="Kidney/Nephron/PCT/BloodVessel/SoluteDisplay/Column2/VBoxContainer/Electrochemical"]
+layout_mode = 2
+text = "mV"
+label_settings = SubResource("LabelSettings_n5f4h")
 
 [node name="PCTCell" type="AnimatedSprite3D" parent="Kidney/Nephron/PCT"]
 transform = Transform3D(0.9999999, 0, 0, 0, 1, 0, 0, 0, 0.9999999, -0.06900287, 0, -0.007972389)
