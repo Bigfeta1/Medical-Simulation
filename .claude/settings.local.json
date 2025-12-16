@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(python3:*)",
-      "Read(//mnt/g/Godot/**)"
+      "Read(//mnt/g/Godot/**)",
+      "Bash(cd:*)"
     ],
     "deny": [],
     "ask": []

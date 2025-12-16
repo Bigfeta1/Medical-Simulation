@@ -58,3 +58,12 @@ func select():
 func deselect():
 	is_selected = false
 	material_override = null
+
+func activate():
+	# Pulse animation: scale up and back down
+	var original_scale = scale
+	var tween = create_tween()
+	tween.set_trans(Tween.TRANS_QUAD)
+	tween.set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(self, "scale", original_scale * 1.3, 0.2)
+	tween.tween_property(self, "scale", original_scale, 0.2)

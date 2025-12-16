@@ -10,7 +10,8 @@ var current_selected_channel = null
 
 func _ready():
 	pressed.connect(_on_pressed)
-
+	if not selection_manager:
+		selection_manager = get_parent().get_parent().get_parent().get_node("Nephron/NephronSelectionManager")
 	if selection_manager:
 		selection_manager.channel_selected.connect(_on_channel_selected)
 		selection_manager.channel_deselected.connect(_on_channel_deselected)
