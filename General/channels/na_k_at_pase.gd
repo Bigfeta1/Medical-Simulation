@@ -2,28 +2,42 @@ extends IonChannel
 
 # Na-K-ATPase pump cycle states (Post-Albers scheme)
 enum PumpState {
-	STANDBY,           # E1 - Ready to bind Na+
-	NA_BINDING,        # E1 + 3Na+ (intracellular) binding
-	ATP_HYDROLYSIS,    # E1-P formation (ATP → ADP + Pi)
-	NA_RELEASE,        # E2-P conformational change, Na+ released extracellularly
-	K_BINDING,         # E2-P + 2K+ (extracellular) binding
-	DEPHOSPHORYLATION, # E2 dephosphorylation
-	K_RELEASE          # E1 conformational change, K+ released intracellularly
+	E1_EMPTY,          # E1 - Empty, ready to bind Na+
+	E1_NA_BOUND,       # E1 + 3Na+ bound, waiting for ATP
+	E1P_NA_BOUND,      # E1-P + 3Na+ phosphorylated
+	E2P_EMPTY,         # E2-P - Na+ released, empty, ready to bind K+
+	E2P_K_BOUND,       # E2-P + 2K+ bound
+	E2_K_BOUND,        # E2 + 2K+ dephosphorylated
+	E1_K_BOUND         # E1 + 2K+ ready to release K+
 }
 
-var current_state: PumpState = PumpState.STANDBY
+var current_state: PumpState = PumpState.E1_EMPTY
 var state_timer: float = 0.0
 var cycling: bool = false
 
 # Pump cycle timing (total ~17ms per cycle)
 const CYCLE_TIME = 0.017  # 17 milliseconds
+
+# Michaelis-Menten constants for substrate binding
+const KM_NA = 15.0   # mM - half-maximal Na+ binding concentration
+const KM_K = 1.5     # mM - half-maximal K+ binding concentration
+
+# Binding rate constants (tuned so binding occurs within ~2-3ms at physiological concentrations)
+# Target: 3ms average binding time for Na+ at 12 mM (44% saturation)
+# At 60 FPS: 3ms = ~0.18 frames (extremely fast, need MUCH lower rate)
+# For binding to take 3-5 frames (50-80ms perceived as "a few moments"):
+# probability_per_frame = 0.444 * rate * 0.0167
+# For ~20-30% chance per frame: rate ≈ 30-40
+# For ~5-10% chance per frame: rate ≈ 8-15
+const NA_BINDING_RATE = 10.0    # ~5% chance per frame at physiological [Na+]
+const K_BINDING_RATE = 20.0     # ~13% chance per frame at physiological [K+]
+
+# State durations for deterministic steps
 const STATE_DURATIONS = {
-	PumpState.NA_BINDING: 0.003,        # 3ms - Na+ binding
-	PumpState.ATP_HYDROLYSIS: 0.002,    # 2ms - ATP phosphorylation
-	PumpState.NA_RELEASE: 0.004,        # 4ms - Conformational change + Na+ release
-	PumpState.K_BINDING: 0.003,         # 3ms - K+ binding
-	PumpState.DEPHOSPHORYLATION: 0.002, # 2ms - Dephosphorylation
-	PumpState.K_RELEASE: 0.003          # 3ms - Conformational change + K+ release
+	PumpState.E1P_NA_BOUND: 0.002,    # 2ms - ATP phosphorylation + conformational change
+	PumpState.E2P_EMPTY: 0.004,       # 4ms - Na+ release (conformational change allows time for K+ to find binding site)
+	PumpState.E2P_K_BOUND: 0.002,     # 2ms - Dephosphorylation
+	PumpState.E1_K_BOUND: 0.003       # 3ms - Conformational change to release K+
 }
 
 # Pump cycle count per activation (representing multiple pumps)
@@ -51,128 +65,166 @@ func _ready():
 func _process(delta):
 	super._process(delta)  # Preserve shader updates
 
-	if not cycling:
-		return
+	match current_state:
+		PumpState.E1_EMPTY:
+			# Probabilistic Na+ binding
+			_attempt_na_binding_probabilistic(delta)
 
-	state_timer += delta
+		PumpState.E1_NA_BOUND:
+			# Waiting for ATP activation (user triggers with activate())
+			pass
 
-	# Check if current state duration is complete
-	var current_duration = STATE_DURATIONS.get(current_state, 0.0)
-	if state_timer >= current_duration:
-		_advance_state()
+		PumpState.E2P_EMPTY:
+			# Probabilistic K+ binding
+			_attempt_k_binding_probabilistic(delta)
+
+		_:
+			# Deterministic timed states
+			if cycling:
+				state_timer += delta
+				var current_duration = STATE_DURATIONS.get(current_state, 0.0)
+				if state_timer >= current_duration:
+					_advance_state()
+					state_timer = 0.0
+
+func _attempt_na_binding_probabilistic(delta):
+	# Probabilistic binding based on Na+ concentration (Michaelis-Menten kinetics)
+	var na_to_bind = 3 * pump_count
+
+	if cell.sodium < na_to_bind:
+		return  # Not enough substrate
+
+	# Calculate intracellular Na+ concentration in mM
+	var na_concentration_mM = (cell.actual_sodium / (cell.volume * 6.022e23)) * 1e3
+
+	# Michaelis-Menten binding probability
+	# At Km concentration, 50% of maximal binding rate
+	var fractional_saturation = na_concentration_mM / (KM_NA + na_concentration_mM)
+
+	# Probability of binding this frame
+	var binding_probability = fractional_saturation * NA_BINDING_RATE * delta
+
+	# Stochastic binding event
+	if randf() < binding_probability:
+		# Bind Na+ - REMOVE from available pool (sequestered on pump)
+		cell.sodium -= na_to_bind
+		cell.actual_sodium -= na_to_bind
+		na_bound = na_to_bind
+		current_state = PumpState.E1_NA_BOUND
+		cell.concentrations_updated.emit()
+		print("[Na-K-ATPase] E1_EMPTY → E1_NA_BOUND: Bound %d Na+ ([Na+]=%0.2f mM, saturation=%0.1f%%)" % [na_to_bind, na_concentration_mM, fractional_saturation * 100])
+
+func _attempt_k_binding_probabilistic(delta):
+	# Probabilistic binding based on K+ concentration (Michaelis-Menten kinetics)
+	var k_to_bind = 2 * pump_count
+
+	if blood.potassium < k_to_bind:
+		return  # Not enough substrate
+
+	# Calculate extracellular K+ concentration in mM
+	var k_concentration_mM = (blood.actual_potassium / (blood.volume * 6.022e23)) * 1e3
+
+	# Michaelis-Menten binding probability
+	var fractional_saturation = k_concentration_mM / (KM_K + k_concentration_mM)
+
+	# Probability of binding this frame
+	var binding_probability = fractional_saturation * K_BINDING_RATE * delta
+
+	# Stochastic binding event
+	if randf() < binding_probability:
+		# Bind K+ - REMOVE from available pool (sequestered on pump)
+		blood.potassium -= k_to_bind
+		blood.actual_potassium -= k_to_bind
+		k_bound = k_to_bind
+		current_state = PumpState.E2P_K_BOUND
 		state_timer = 0.0
+		blood.concentrations_updated.emit()
+		print("[Na-K-ATPase] E2P_EMPTY → E2P_K_BOUND: Bound %d K+ ([K+]=%0.2f mM, saturation=%0.1f%%)" % [k_to_bind, k_concentration_mM, fractional_saturation * 100])
 
 func activate():
 	super.activate()  # Pulse animation
 
 	if cycling:
+		print("[Na-K-ATPase] Cannot activate: Already cycling (current state: %s)" % PumpState.keys()[current_state])
 		return  # Already cycling
 
-	# Start pump cycle
+	# Can only activate if Na+ is already bound
+	if current_state != PumpState.E1_NA_BOUND or na_bound == 0:
+		push_warning("[Na-K-ATPase] Cannot activate: No Na+ bound (current state: %s)" % PumpState.keys()[current_state])
+		return
+
+	# Check ATP availability
+	var atp_required = pump_count
+	if cell.atp < atp_required:
+		push_warning("[Na-K-ATPase] Cannot activate: Insufficient ATP (required=%d, available=%d)" % [atp_required, cell.atp])
+		return
+
+	# Start ATP-dependent cycle
 	cycling = true
-	current_state = PumpState.NA_BINDING
+	current_state = PumpState.E1P_NA_BOUND
 	state_timer = 0.0
 	atp_consumed = false
-	na_bound = 0
 	k_bound = 0
+
+	# Consume ATP immediately
+	cell.atp -= atp_required
+	atp_consumed = true
+	cell.concentrations_updated.emit()
+	print("[Na-K-ATPase] E1_NA_BOUND → E1P_NA_BOUND: ATP consumed (%d), phosphorylation complete" % atp_required)
 
 func _advance_state():
 	match current_state:
-		PumpState.NA_BINDING:
-			_bind_sodium()
-			current_state = PumpState.ATP_HYDROLYSIS
-
-		PumpState.ATP_HYDROLYSIS:
-			_hydrolyze_atp()
-			current_state = PumpState.NA_RELEASE
-
-		PumpState.NA_RELEASE:
+		PumpState.E1P_NA_BOUND:
+			# E1-P + 3Na+ → E2-P (conformational change releases Na+ outside)
 			_release_sodium()
-			current_state = PumpState.K_BINDING
+			current_state = PumpState.E2P_EMPTY
+			state_timer = 0.0
+			print("[Na-K-ATPase] E1P_NA_BOUND → E2P_EMPTY: Conformational change, %d Na+ released to blood (2ms)" % na_bound)
 
-		PumpState.K_BINDING:
-			_bind_potassium()
-			current_state = PumpState.DEPHOSPHORYLATION
+		PumpState.E2P_K_BOUND:
+			# E2-P + 2K+ → E2 + 2K+ (dephosphorylation)
+			current_state = PumpState.E2_K_BOUND
+			state_timer = 0.0
+			print("[Na-K-ATPase] E2P_K_BOUND → E2_K_BOUND: Dephosphorylation complete (2ms)")
 
-		PumpState.DEPHOSPHORYLATION:
-			_dephosphorylate()
-			current_state = PumpState.K_RELEASE
+		PumpState.E2_K_BOUND:
+			# E2 + 2K+ → E1 (conformational change)
+			current_state = PumpState.E1_K_BOUND
+			state_timer = 0.0
+			print("[Na-K-ATPase] E2_K_BOUND → E1_K_BOUND: Conformational change back to E1 (2ms)")
 
-		PumpState.K_RELEASE:
+		PumpState.E1_K_BOUND:
+			# E1 + 2K+ → E1 (release K+ inside)
 			_release_potassium()
-			current_state = PumpState.STANDBY
+			current_state = PumpState.E1_EMPTY
 			cycling = false
-
-func _bind_sodium():
-	# Bind 3 Na+ from intracellular side
-	var na_to_bind = 3 * pump_count
-
-	if cell.sodium >= na_to_bind:
-		na_bound = na_to_bind
-		# Don't remove from cell yet - binding is reversible until phosphorylation
-	else:
-		# Insufficient substrate - abort cycle
-		cycling = false
-		current_state = PumpState.STANDBY
-
-func _hydrolyze_atp():
-	# ATP + E1-3Na+ → E1-P-3Na+ + ADP
-	# Check ATP availability
-	var atp_required = pump_count  # 1 ATP per pump cycle
-
-	if cell.atp >= atp_required:
-		# Consume ATP (this phosphorylates the pump, making Na+ binding irreversible)
-		cell.atp -= atp_required
-		atp_consumed = true
-
-		# Now irreversibly remove Na+ from cell (committed to transport)
-		cell.sodium -= na_bound
-		cell.actual_sodium -= na_bound
-
-		cell.concentrations_updated.emit()
-	else:
-		# No ATP - abort cycle, return Na+ to pool
-		cycling = false
-		current_state = PumpState.STANDBY
-		na_bound = 0
+			var released_na = na_bound
+			var released_k = k_bound
+			na_bound = 0
+			k_bound = 0
+			state_timer = 0.0
+			print("[Na-K-ATPase] E1_K_BOUND → E1_EMPTY: %d K+ released to cell, cycle complete (3ms)" % released_k)
 
 func _release_sodium():
 	# E1-P-3Na+ → E2-P + 3Na+ (extracellular)
 	# Conformational change releases Na+ to blood side
-	if atp_consumed and na_bound > 0:
+	if na_bound > 0:
 		blood.sodium += na_bound
 		blood.actual_sodium += na_bound
 		blood.concentrations_updated.emit()
 
-func _bind_potassium():
-	# Bind 2 K+ from extracellular side
-	var k_to_bind = 2 * pump_count
-
-	if blood.potassium >= k_to_bind:
-		k_bound = k_to_bind
-		# Don't remove from blood yet - binding is reversible until dephosphorylation
-	else:
-		# Insufficient substrate - cycle stalls but can continue if K+ becomes available
-		# In real biology, pump would wait or slowly reverse
-		cycling = false
-		current_state = PumpState.STANDBY
-
-func _dephosphorylate():
-	# E2-P-2K+ → E2-2K+ + Pi
-	# Dephosphorylation makes K+ binding irreversible
-	if k_bound > 0:
-		blood.potassium -= k_bound
-		blood.actual_potassium -= k_bound
-		blood.concentrations_updated.emit()
-
 func _release_potassium():
-	# E2-2K+ → E1 + 2K+ (intracellular)
+	# E1 + 2K+ → E1 + 2K+ (intracellular)
 	# Conformational change releases K+ to cell side
 	if k_bound > 0:
 		cell.potassium += k_bound
 		cell.actual_potassium += k_bound
 		cell.concentrations_updated.emit()
 
-		# Cycle complete
+		# Final cycle summary
 		var voltage = cell.electrochemical_field.calculate_resting_potential(blood) if cell.electrochemical_field else 0
-		print("Na-K-ATPase cycle complete (17ms): %d Na+ out, %d K+ in | Voltage: %.2f mV" % [na_bound, k_bound, voltage])
+		print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+		print("[Na-K-ATPase] CYCLE COMPLETE (~17ms total)")
+		print("  Net transport: %d Na+ OUT, %d K+ IN" % [na_bound, k_bound])
+		print("  Membrane potential: %.2f mV" % voltage)
+		print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
