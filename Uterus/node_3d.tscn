@@ -9,7 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://c6xg3rrto0300" path="res://Kidney/Assets/Nephron/PCT/PCT_Front2.png" id="4_2hvlm"]
 [ext_resource type="Texture2D" uid="uid://c711lcs12sed8" path="res://Kidney/Assets/Nephron/PCT/channels/apical/SGLT2_2.png" id="4_dr4th"]
 [ext_resource type="Script" uid="uid://cuikahtaka7kl" path="res://Kidney/Scripts/Nephron/pct_cell.gd" id="4_x2dpx"]
-[ext_resource type="Script" uid="uid://br3dxl4mnklmu" path="res://Kidney/Scripts/Nephron/channels/sglt2.gd" id="5_kiguq"]
+[ext_resource type="Script" uid="uid://bdadcg67yqp2o" path="res://Kidney/Scripts/Nephron/channels/sglt2.gd" id="5_kiguq"]
 [ext_resource type="Texture2D" uid="uid://cpw0do8gjf463" path="res://Kidney/Assets/Nephron/PCT/channels/basolateral/Na_K_ATPase1.png" id="5_v2sg4"]
 [ext_resource type="Texture2D" uid="uid://b13yoms7a5cvn" path="res://Kidney/Assets/Nephron/PCT/channels/basolateral/Na_K_ATPase2.png" id="6_507ss"]
 [ext_resource type="Script" uid="uid://xqgm0iiexouy" path="res://Kidney/Scripts/Nephron/utilities/electrochemical_field.gd" id="6_rjkdb"]
@@ -27,7 +27,7 @@ albedo_color = Color(0.5302961, 0.050957, 0.12168456, 1)
 
 [sub_resource type="TorusMesh" id="TorusMesh_dr4th"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_n5f4h"]
+[sub_resource type="LabelSettings" id="LabelSettings_thxmj"]
 font_size = 10
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_rls6d"]
@@ -58,6 +58,23 @@ animations = [{
 "speed": 2.0
 }]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qg4cs"]
+albedo_color = Color(0.21568628, 1, 1, 1)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_wt3wf"]
+emission_shape_scale = Vector3(1.885, 3.905, 1)
+emission_shape = 6
+emission_ring_axis = Vector3(0, 0, 1)
+emission_ring_height = 1.0
+emission_ring_radius = 1.0
+emission_ring_inner_radius = 0.0
+emission_ring_cone_angle = 90.0
+gravity = Vector3(0, -1, 0)
+
+[sub_resource type="SphereMesh" id="SphereMesh_8apwo"]
+radius = 0.01
+height = 0.02
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_v2sg4"]
 animations = [{
 "frames": [{
@@ -87,23 +104,6 @@ animations = [{
 "name": &"default",
 "speed": 2.0
 }]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qg4cs"]
-albedo_color = Color(0.21568628, 1, 1, 1)
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_wt3wf"]
-emission_shape_scale = Vector3(1.885, 3.905, 1)
-emission_shape = 6
-emission_ring_axis = Vector3(0, 0, 1)
-emission_ring_height = 1.0
-emission_ring_radius = 1.0
-emission_ring_inner_radius = 0.0
-emission_ring_cone_angle = 90.0
-gravity = Vector3(0, -1, 0)
-
-[sub_resource type="SphereMesh" id="SphereMesh_8apwo"]
-radius = 0.01
-height = 0.02
 
 [node name="Main" type="Node3D"]
 
@@ -168,17 +168,17 @@ theme_override_constants/separation = 0
 [node name="SodiumLabel" type="Label" parent="Kidney/Nephron/PCT/BloodVessel/SoluteDisplay/Column1/VBoxContainer/Electrolytes"]
 layout_mode = 2
 text = "Sodium"
-label_settings = SubResource("LabelSettings_n5f4h")
+label_settings = SubResource("LabelSettings_thxmj")
 
 [node name="PotassiumLabel" type="Label" parent="Kidney/Nephron/PCT/BloodVessel/SoluteDisplay/Column1/VBoxContainer/Electrolytes"]
 layout_mode = 2
 text = "Potassium"
-label_settings = SubResource("LabelSettings_n5f4h")
+label_settings = SubResource("LabelSettings_thxmj")
 
 [node name="ChlorideLabel" type="Label" parent="Kidney/Nephron/PCT/BloodVessel/SoluteDisplay/Column1/VBoxContainer/Electrolytes"]
 layout_mode = 2
 text = "Chloride"
-label_settings = SubResource("LabelSettings_n5f4h")
+label_settings = SubResource("LabelSettings_thxmj")
 
 [node name="LargeComponents" type="VBoxContainer" parent="Kidney/Nephron/PCT/BloodVessel/SoluteDisplay/Column1/VBoxContainer"]
 layout_mode = 2
@@ -187,12 +187,12 @@ theme_override_constants/separation = 0
 [node name="GlucoseLabel" type="Label" parent="Kidney/Nephron/PCT/BloodVessel/SoluteDisplay/Column1/VBoxContainer/LargeComponents"]
 layout_mode = 2
 text = "Sodium"
-label_settings = SubResource("LabelSettings_n5f4h")
+label_settings = SubResource("LabelSettings_thxmj")
 
 [node name="AminoAcidLabel" type="Label" parent="Kidney/Nephron/PCT/BloodVessel/SoluteDisplay/Column1/VBoxContainer/LargeComponents"]
 layout_mode = 2
 text = "Potassium"
-label_settings = SubResource("LabelSettings_n5f4h")
+label_settings = SubResource("LabelSettings_thxmj")
 
 [node name="AcidBase" type="VBoxContainer" parent="Kidney/Nephron/PCT/BloodVessel/SoluteDisplay/Column1/VBoxContainer"]
 layout_mode = 2
@@ -201,12 +201,12 @@ theme_override_constants/separation = 0
 [node name="WaterLabel" type="Label" parent="Kidney/Nephron/PCT/BloodVessel/SoluteDisplay/Column1/VBoxContainer/AcidBase"]
 layout_mode = 2
 text = "Sodium"
-label_settings = SubResource("LabelSettings_n5f4h")
+label_settings = SubResource("LabelSettings_thxmj")
 
 [node name="CarbonDioxideLabel" type="Label" parent="Kidney/Nephron/PCT/BloodVessel/SoluteDisplay/Column1/VBoxContainer/AcidBase"]
 layout_mode = 2
 text = "Sodium"
-label_settings = SubResource("LabelSettings_n5f4h")
+label_settings = SubResource("LabelSettings_thxmj")
 
 [node name="AcidBase2" type="VBoxContainer" parent="Kidney/Nephron/PCT/BloodVessel/SoluteDisplay/Column1/VBoxContainer"]
 layout_mode = 2
@@ -215,7 +215,7 @@ theme_override_constants/separation = 0
 [node name="ProtonLabel" type="Label" parent="Kidney/Nephron/PCT/BloodVessel/SoluteDisplay/Column1/VBoxContainer/AcidBase2"]
 layout_mode = 2
 text = "H+"
-label_settings = SubResource("LabelSettings_n5f4h")
+label_settings = SubResource("LabelSettings_thxmj")
 
 [node name="Column2" type="VBoxContainer" parent="Kidney/Nephron/PCT/BloodVessel/SoluteDisplay"]
 layout_mode = 0
@@ -235,7 +235,7 @@ theme_override_constants/separation = 0
 [node name="VoltageLabel" type="Label" parent="Kidney/Nephron/PCT/BloodVessel/SoluteDisplay/Column2/VBoxContainer/Electrochemical"]
 layout_mode = 2
 text = "mV"
-label_settings = SubResource("LabelSettings_n5f4h")
+label_settings = SubResource("LabelSettings_thxmj")
 
 [node name="PCTCell" type="AnimatedSprite3D" parent="Kidney/Nephron/PCT"]
 transform = Transform3D(0.9999999, 0, 0, 0, 1, 0, 0, 0, 0.9999999, -0.06900287, 0, -0.007972389)
@@ -282,14 +282,17 @@ theme_override_constants/separation = 0
 [node name="SodiumLabel" type="Label" parent="Kidney/Nephron/PCT/PCTCell/SoluteDisplay/Column1/VBoxContainer/Electrolytes"]
 layout_mode = 2
 text = "Sodium"
+label_settings = SubResource("LabelSettings_thxmj")
 
 [node name="PotassiumLabel" type="Label" parent="Kidney/Nephron/PCT/PCTCell/SoluteDisplay/Column1/VBoxContainer/Electrolytes"]
 layout_mode = 2
 text = "Potassium"
+label_settings = SubResource("LabelSettings_thxmj")
 
 [node name="ChlorideLabel" type="Label" parent="Kidney/Nephron/PCT/PCTCell/SoluteDisplay/Column1/VBoxContainer/Electrolytes"]
 layout_mode = 2
 text = "Chloride"
+label_settings = SubResource("LabelSettings_thxmj")
 
 [node name="LargeComponents" type="VBoxContainer" parent="Kidney/Nephron/PCT/PCTCell/SoluteDisplay/Column1/VBoxContainer"]
 layout_mode = 2
@@ -298,10 +301,12 @@ theme_override_constants/separation = 0
 [node name="GlucoseLabel" type="Label" parent="Kidney/Nephron/PCT/PCTCell/SoluteDisplay/Column1/VBoxContainer/LargeComponents"]
 layout_mode = 2
 text = "Sodium"
+label_settings = SubResource("LabelSettings_thxmj")
 
 [node name="AminoAcidLabel" type="Label" parent="Kidney/Nephron/PCT/PCTCell/SoluteDisplay/Column1/VBoxContainer/LargeComponents"]
 layout_mode = 2
 text = "Potassium"
+label_settings = SubResource("LabelSettings_thxmj")
 
 [node name="AcidBase" type="VBoxContainer" parent="Kidney/Nephron/PCT/PCTCell/SoluteDisplay/Column1/VBoxContainer"]
 layout_mode = 2
@@ -310,10 +315,12 @@ theme_override_constants/separation = 0
 [node name="WaterLabel" type="Label" parent="Kidney/Nephron/PCT/PCTCell/SoluteDisplay/Column1/VBoxContainer/AcidBase"]
 layout_mode = 2
 text = "Sodium"
+label_settings = SubResource("LabelSettings_thxmj")
 
 [node name="CarbonDioxideLabel" type="Label" parent="Kidney/Nephron/PCT/PCTCell/SoluteDisplay/Column1/VBoxContainer/AcidBase"]
 layout_mode = 2
 text = "Sodium"
+label_settings = SubResource("LabelSettings_thxmj")
 
 [node name="AcidBase2" type="VBoxContainer" parent="Kidney/Nephron/PCT/PCTCell/SoluteDisplay/Column1/VBoxContainer"]
 layout_mode = 2
@@ -322,6 +329,7 @@ theme_override_constants/separation = 0
 [node name="ProtonLabel" type="Label" parent="Kidney/Nephron/PCT/PCTCell/SoluteDisplay/Column1/VBoxContainer/AcidBase2"]
 layout_mode = 2
 text = "H+"
+label_settings = SubResource("LabelSettings_thxmj")
 
 [node name="Column2" type="VBoxContainer" parent="Kidney/Nephron/PCT/PCTCell/SoluteDisplay"]
 layout_mode = 0
@@ -341,42 +349,7 @@ theme_override_constants/separation = 0
 [node name="VoltageLabel" type="Label" parent="Kidney/Nephron/PCT/PCTCell/SoluteDisplay/Column2/VBoxContainer/Electrochemical"]
 layout_mode = 2
 text = "mV"
-
-[node name="Channels" type="Node3D" parent="Kidney/Nephron/PCT"]
-transform = Transform3D(0.9999999, 0, 0, 0, 1, 0, 0, 0, 0.9999999, 0, 0, -0.007972389)
-
-[node name="Apical" type="Node3D" parent="Kidney/Nephron/PCT/Channels"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5147771, 0, 0)
-
-[node name="SGLT2" type="AnimatedSprite3D" parent="Kidney/Nephron/PCT/Channels/Apical"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.07331389, 2.5804367, 0)
-no_depth_test = true
-sprite_frames = SubResource("SpriteFrames_v2sg4")
-frame_progress = 0.8599167
-script = ExtResource("5_kiguq")
-channel_name = "SGLT2"
-epithelial_polarity = 1
-
-[node name="StaticBody3D" type="StaticBody3D" parent="Kidney/Nephron/PCT/Channels/Apical/SGLT2"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Kidney/Nephron/PCT/Channels/Apical/SGLT2/StaticBody3D"]
-shape = SubResource("BoxShape3D_6khlg")
-
-[node name="Basolateral" type="Node3D" parent="Kidney/Nephron/PCT/Channels"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6588893, 1.2371134, 0)
-
-[node name="Na_K_ATPase" type="AnimatedSprite3D" parent="Kidney/Nephron/PCT/Channels/Basolateral"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25851727, -0.7324513, 0.035830263)
-sprite_frames = SubResource("SpriteFrames_kiguq")
-frame_progress = 0.45564502
-script = ExtResource("12_v4lkt")
-channel_name = "Na_K_ATPase"
-epithelial_polarity = 2
-
-[node name="StaticBody3D" type="StaticBody3D" parent="Kidney/Nephron/PCT/Channels/Basolateral/Na_K_ATPase"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Kidney/Nephron/PCT/Channels/Basolateral/Na_K_ATPase/StaticBody3D"]
-shape = SubResource("BoxShape3D_6khlg")
+label_settings = SubResource("LabelSettings_thxmj")
 
 [node name="PCTLumen" type="Node3D" parent="Kidney/Nephron/PCT"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8601504, 0, 0)
@@ -414,14 +387,17 @@ theme_override_constants/separation = 0
 [node name="SodiumLabel" type="Label" parent="Kidney/Nephron/PCT/PCTLumen/SoluteDisplay/Column1/VBoxContainer/Electrolytes"]
 layout_mode = 2
 text = "Sodium"
+label_settings = SubResource("LabelSettings_thxmj")
 
 [node name="PotassiumLabel" type="Label" parent="Kidney/Nephron/PCT/PCTLumen/SoluteDisplay/Column1/VBoxContainer/Electrolytes"]
 layout_mode = 2
 text = "Potassium"
+label_settings = SubResource("LabelSettings_thxmj")
 
 [node name="ChlorideLabel" type="Label" parent="Kidney/Nephron/PCT/PCTLumen/SoluteDisplay/Column1/VBoxContainer/Electrolytes"]
 layout_mode = 2
 text = "Chloride"
+label_settings = SubResource("LabelSettings_thxmj")
 
 [node name="LargeComponents" type="VBoxContainer" parent="Kidney/Nephron/PCT/PCTLumen/SoluteDisplay/Column1/VBoxContainer"]
 layout_mode = 2
@@ -430,10 +406,12 @@ theme_override_constants/separation = 0
 [node name="GlucoseLabel" type="Label" parent="Kidney/Nephron/PCT/PCTLumen/SoluteDisplay/Column1/VBoxContainer/LargeComponents"]
 layout_mode = 2
 text = "Sodium"
+label_settings = SubResource("LabelSettings_thxmj")
 
 [node name="AminoAcidLabel" type="Label" parent="Kidney/Nephron/PCT/PCTLumen/SoluteDisplay/Column1/VBoxContainer/LargeComponents"]
 layout_mode = 2
 text = "Potassium"
+label_settings = SubResource("LabelSettings_thxmj")
 
 [node name="AcidBase" type="VBoxContainer" parent="Kidney/Nephron/PCT/PCTLumen/SoluteDisplay/Column1/VBoxContainer"]
 layout_mode = 2
@@ -442,10 +420,12 @@ theme_override_constants/separation = 0
 [node name="WaterLabel" type="Label" parent="Kidney/Nephron/PCT/PCTLumen/SoluteDisplay/Column1/VBoxContainer/AcidBase"]
 layout_mode = 2
 text = "Sodium"
+label_settings = SubResource("LabelSettings_thxmj")
 
 [node name="CarbonDioxideLabel" type="Label" parent="Kidney/Nephron/PCT/PCTLumen/SoluteDisplay/Column1/VBoxContainer/AcidBase"]
 layout_mode = 2
 text = "Sodium"
+label_settings = SubResource("LabelSettings_thxmj")
 
 [node name="AcidBase2" type="VBoxContainer" parent="Kidney/Nephron/PCT/PCTLumen/SoluteDisplay/Column1/VBoxContainer"]
 layout_mode = 2
@@ -454,6 +434,7 @@ theme_override_constants/separation = 0
 [node name="ProtonLabel" type="Label" parent="Kidney/Nephron/PCT/PCTLumen/SoluteDisplay/Column1/VBoxContainer/AcidBase2"]
 layout_mode = 2
 text = "H+"
+label_settings = SubResource("LabelSettings_thxmj")
 
 [node name="Column2" type="VBoxContainer" parent="Kidney/Nephron/PCT/PCTLumen/SoluteDisplay"]
 layout_mode = 0
@@ -473,6 +454,7 @@ theme_override_constants/separation = 0
 [node name="VoltageLabel" type="Label" parent="Kidney/Nephron/PCT/PCTLumen/SoluteDisplay/Column2/VBoxContainer/Electrochemical"]
 layout_mode = 2
 text = "mV"
+label_settings = SubResource("LabelSettings_thxmj")
 
 [node name="Sodium" parent="Kidney/Nephron/PCT/PCTLumen" instance=ExtResource("14_na176")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1145844, 2.9389777, 6.376831)
@@ -483,6 +465,42 @@ material_override = SubResource("StandardMaterial3D_qg4cs")
 amount = 100
 process_material = SubResource("ParticleProcessMaterial_wt3wf")
 draw_pass_1 = SubResource("SphereMesh_8apwo")
+
+[node name="Channels" type="Node3D" parent="Kidney/Nephron/PCT"]
+transform = Transform3D(0.9999999, 0, 0, 0, 1, 0, 0, 0, 0.9999999, 0, 0, -0.007972389)
+
+[node name="Apical" type="Node3D" parent="Kidney/Nephron/PCT/Channels"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5147771, 0, 0)
+
+[node name="SGLT2" type="AnimatedSprite3D" parent="Kidney/Nephron/PCT/Channels/Apical"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.07331389, 2.5804367, 0)
+no_depth_test = true
+sprite_frames = SubResource("SpriteFrames_v2sg4")
+frame_progress = 0.8599167
+script = ExtResource("5_kiguq")
+channel_name = "SGLT2"
+epithelial_polarity = 1
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Kidney/Nephron/PCT/Channels/Apical/SGLT2"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Kidney/Nephron/PCT/Channels/Apical/SGLT2/StaticBody3D"]
+shape = SubResource("BoxShape3D_6khlg")
+
+[node name="Basolateral" type="Node3D" parent="Kidney/Nephron/PCT/Channels"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6588893, 1.2371134, 0)
+
+[node name="Na_K_ATPase" type="AnimatedSprite3D" parent="Kidney/Nephron/PCT/Channels/Basolateral"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25851727, -0.7324513, 0.035830263)
+sprite_frames = SubResource("SpriteFrames_kiguq")
+frame_progress = 0.45564502
+script = ExtResource("12_v4lkt")
+channel_name = "Na_K_ATPase"
+epithelial_polarity = 2
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Kidney/Nephron/PCT/Channels/Basolateral/Na_K_ATPase"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Kidney/Nephron/PCT/Channels/Basolateral/Na_K_ATPase/StaticBody3D"]
+shape = SubResource("BoxShape3D_6khlg")
 
 [node name="Control" type="Control" parent="Kidney"]
 layout_mode = 3

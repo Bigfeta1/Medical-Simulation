@@ -6,15 +6,15 @@
 			"transports": [
 				{
 					"substrate": "Na+",
-					"source": "lumen",
-					"destination": "cell",
-					"quantity": 1
+					"source": "kidney.pct.lumen",
+					"destination": "kidney.pct.cell",
+					"quantity": 1.0
 				},
 				{
 					"substrate": "Glucose",
-					"source": "lumen",
-					"destination": "cell",
-					"quantity": 1
+					"source": "kidney.pct.lumen",
+					"destination": "kidney.pct.cell",
+					"quantity": 1.0
 				}
 			]
 		},
@@ -26,13 +26,13 @@
 					"substrate": "Na+",
 					"source": "lumen",
 					"destination": "cell",
-					"quantity": 1
+					"quantity": 1.0
 				},
 				{
 					"substrate": "H+",
 					"source": "cell",
 					"destination": "lumen",
-					"quantity": 1
+					"quantity": 1.0
 				}
 			]
 		},
@@ -44,13 +44,13 @@
 					"substrate": "Cl-",
 					"source": "lumen",
 					"destination": "cell",
-					"quantity": 1
+					"quantity": 1.0
 				},
 				{
 					"substrate": "HCO3-",
 					"source": "cell",
 					"destination": "lumen",
-					"quantity": 1
+					"quantity": 1.0
 				}
 			]
 		},
@@ -62,13 +62,13 @@
 					"substrate": "Na+",
 					"source": "lumen",
 					"destination": "cell",
-					"quantity": 1
+					"quantity": 1.0
 				},
 				{
 					"substrate": "HCO3-",
 					"source": "lumen",
 					"destination": "cell",
-					"quantity": 3
+					"quantity": 3.0
 				}
 			]
 		},
@@ -80,13 +80,13 @@
 					"substrate": "Na+",
 					"source": "lumen",
 					"destination": "cell",
-					"quantity": 1
+					"quantity": 1.0
 				},
 				{
 					"substrate": "Amino Acids",
 					"source": "lumen",
 					"destination": "cell",
-					"quantity": 1
+					"quantity": 1.0
 				}
 			]
 		}
@@ -100,19 +100,19 @@
 					"substrate": "Na+",
 					"source": "kidney.pct.cell",
 					"destination": "kidney.pct.blood",
-					"quantity": 3
+					"quantity": 3.0
 				},
 				{
 					"substrate": "K+",
 					"source": "kidney.pct.blood",
 					"destination": "kidney.pct.cell",
-					"quantity": 2
+					"quantity": 2.0
 				},
 				{
 					"substrate": "ATP",
 					"source": "kidney.pct.cell",
 					"destination": "consumed",
-					"quantity": 1
+					"quantity": 1.0
 				}
 			]
 		},
@@ -122,9 +122,9 @@
 			"transports": [
 				{
 					"substrate": "Glucose",
-					"source": "cell",
-					"destination": "blood",
-					"quantity": 1
+					"source": "kidney.pct.cell",
+					"destination": "kidney.pct.blood",
+					"quantity": 1.0
 				}
 			]
 		},
@@ -136,13 +136,13 @@
 					"substrate": "K+",
 					"source": "cell",
 					"destination": "blood",
-					"quantity": 1
+					"quantity": 1.0
 				},
 				{
 					"substrate": "Cl-",
 					"source": "cell",
 					"destination": "blood",
-					"quantity": 1
+					"quantity": 1.0
 				}
 			]
 		},
@@ -154,13 +154,13 @@
 					"substrate": "Na+",
 					"source": "cell",
 					"destination": "blood",
-					"quantity": 1
+					"quantity": 1.0
 				},
 				{
 					"substrate": "HCO3-",
 					"source": "cell",
 					"destination": "blood",
-					"quantity": 3
+					"quantity": 3.0
 				}
 			]
 		},
@@ -172,13 +172,13 @@
 					"substrate": "Amino Acids",
 					"source": "cell",
 					"destination": "blood",
-					"quantity": 1
+					"quantity": 1.0
 				},
 				{
 					"substrate": "Peptides",
 					"source": "cell",
 					"destination": "blood",
-					"quantity": 1
+					"quantity": 1.0
 				}
 			]
 		}
