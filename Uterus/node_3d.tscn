@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://byoqlrob0vm10"]
+[gd_scene load_steps=33 format=3 uid="uid://byoqlrob0vm10"]
 
 [ext_resource type="Texture2D" uid="uid://cytfkheigffsc" path="res://Kidney/Assets/Nephron/PCT/PCT_base1.png" id="1_8apwo"]
 [ext_resource type="Script" uid="uid://c5vwawa4eq3fw" path="res://Kidney/Scripts/kidney.gd" id="1_nx5q5"]
@@ -20,6 +20,7 @@
 [ext_resource type="PackedScene" uid="uid://ddaow82k445ol" path="res://General/ions/ion_sodium.tscn" id="14_na176"]
 [ext_resource type="Script" uid="uid://cdmrjsw80okg0" path="res://Kidney/Scripts/Nephron/pct/pct_solute_display_manager.gd" id="14_pfbj3"]
 [ext_resource type="Script" uid="uid://by58sxxw30hhp" path="res://General/channels/activate_receptor_button.gd" id="19_hb7x5"]
+[ext_resource type="Script" uid="uid://b8tfhgn6vrur7" path="res://Kidney/Scripts/Nephron/pct_lumen.gd" id="20_lumen"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_507ss"]
 albedo_color = Color(0.5302961, 0.050957, 0.12168456, 1)
@@ -379,6 +380,99 @@ shape = SubResource("BoxShape3D_6khlg")
 
 [node name="PCTLumen" type="Node3D" parent="Kidney/Nephron/PCT"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8601504, 0, 0)
+script = ExtResource("20_lumen")
+
+[node name="ElectrochemicalField" type="Node3D" parent="Kidney/Nephron/PCT/PCTLumen"]
+script = ExtResource("6_rjkdb")
+
+[node name="SoluteDisplay" type="Control" parent="Kidney/Nephron/PCT/PCTLumen"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 526.0
+offset_top = 122.0
+offset_right = 566.0
+offset_bottom = 162.0
+
+[node name="Solute_Display_Manager" type="Node" parent="Kidney/Nephron/PCT/PCTLumen/SoluteDisplay"]
+script = ExtResource("14_pfbj3")
+
+[node name="Column1" type="VBoxContainer" parent="Kidney/Nephron/PCT/PCTLumen/SoluteDisplay"]
+layout_mode = 0
+offset_left = 13.0
+offset_top = 47.0
+offset_right = 94.0
+offset_bottom = 303.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Kidney/Nephron/PCT/PCTLumen/SoluteDisplay/Column1"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Electrolytes" type="VBoxContainer" parent="Kidney/Nephron/PCT/PCTLumen/SoluteDisplay/Column1/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="SodiumLabel" type="Label" parent="Kidney/Nephron/PCT/PCTLumen/SoluteDisplay/Column1/VBoxContainer/Electrolytes"]
+layout_mode = 2
+text = "Sodium"
+
+[node name="PotassiumLabel" type="Label" parent="Kidney/Nephron/PCT/PCTLumen/SoluteDisplay/Column1/VBoxContainer/Electrolytes"]
+layout_mode = 2
+text = "Potassium"
+
+[node name="ChlorideLabel" type="Label" parent="Kidney/Nephron/PCT/PCTLumen/SoluteDisplay/Column1/VBoxContainer/Electrolytes"]
+layout_mode = 2
+text = "Chloride"
+
+[node name="LargeComponents" type="VBoxContainer" parent="Kidney/Nephron/PCT/PCTLumen/SoluteDisplay/Column1/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="GlucoseLabel" type="Label" parent="Kidney/Nephron/PCT/PCTLumen/SoluteDisplay/Column1/VBoxContainer/LargeComponents"]
+layout_mode = 2
+text = "Sodium"
+
+[node name="AminoAcidLabel" type="Label" parent="Kidney/Nephron/PCT/PCTLumen/SoluteDisplay/Column1/VBoxContainer/LargeComponents"]
+layout_mode = 2
+text = "Potassium"
+
+[node name="AcidBase" type="VBoxContainer" parent="Kidney/Nephron/PCT/PCTLumen/SoluteDisplay/Column1/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="WaterLabel" type="Label" parent="Kidney/Nephron/PCT/PCTLumen/SoluteDisplay/Column1/VBoxContainer/AcidBase"]
+layout_mode = 2
+text = "Sodium"
+
+[node name="CarbonDioxideLabel" type="Label" parent="Kidney/Nephron/PCT/PCTLumen/SoluteDisplay/Column1/VBoxContainer/AcidBase"]
+layout_mode = 2
+text = "Sodium"
+
+[node name="AcidBase2" type="VBoxContainer" parent="Kidney/Nephron/PCT/PCTLumen/SoluteDisplay/Column1/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="ProtonLabel" type="Label" parent="Kidney/Nephron/PCT/PCTLumen/SoluteDisplay/Column1/VBoxContainer/AcidBase2"]
+layout_mode = 2
+text = "H+"
+
+[node name="Column2" type="VBoxContainer" parent="Kidney/Nephron/PCT/PCTLumen/SoluteDisplay"]
+layout_mode = 0
+offset_left = 248.0
+offset_top = 47.0
+offset_right = 329.0
+offset_bottom = 303.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Kidney/Nephron/PCT/PCTLumen/SoluteDisplay/Column2"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Electrochemical" type="VBoxContainer" parent="Kidney/Nephron/PCT/PCTLumen/SoluteDisplay/Column2/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="VoltageLabel" type="Label" parent="Kidney/Nephron/PCT/PCTLumen/SoluteDisplay/Column2/VBoxContainer/Electrochemical"]
+layout_mode = 2
+text = "mV"
 
 [node name="Sodium" parent="Kidney/Nephron/PCT/PCTLumen" instance=ExtResource("14_na176")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1145844, 2.9389777, 6.376831)

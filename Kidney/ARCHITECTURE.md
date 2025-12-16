@@ -8,9 +8,35 @@ The simulation must produce physiological results (e.g., 67% reabsorption in PCT
 
 ---
 
-## Three-Layer System
+## ⚠️ CRITICAL PHYSICS NITPICK - FUTURE IMPLEMENTATION WARNING
 
-### 1. Particle Layer (Discrete Agents)
+**The "Particle Layer" described below is aspirational future work that requires expert biophysics implementation.**
+
+**Current Implementation (CORRECT):** We track ion **counts** in compartments and move them numerically:
+```gdscript
+cell.sodium -= 3_000_000
+blood.sodium += 3_000_000
+voltage = calculate_from_concentrations()
+```
+
+**Future Particle Simulation (HARD):** Would require solving two major physics problems:
+
+1. **Screened Electrostatics**: Ions in water don't interact via bare Coulomb forces (F = kq₁q₂/r²). Water's dielectric (ε_r ≈ 80) screens charges. Must use **Debye-Hückel screened potential** with ~0.7 nm Debye length, or ions will unrealistically cluster/separate.
+
+2. **Overdamped Dynamics**: At nanoscale, viscous drag dominates (Reynolds # ~10⁻⁴). Ions have no inertia—they instantly reach terminal velocity. Must use **overdamped Langevin dynamics** (velocity ∝ force, not acceleration), plus correct Brownian motion from fluctuation-dissipation theorem, or particles will oscillate instead of diffuse.
+
+**Recommendation**: Only attempt particle-level simulation if:
+- You have biophysics expertise
+- You implement screened electrostatics + overdamped dynamics correctly
+- You validate with test cases (Debye cloud formation, Einstein diffusion relation)
+
+**Otherwise**: Stick with compartment-based counting (current approach). It's physiologically accurate and computationally tractable.
+
+---
+
+## Three-Layer System (ASPIRATIONAL - See warning above)
+
+### 1. Particle Layer (Discrete Agents) - NOT YET IMPLEMENTED
 Individual ions and molecules exist as distinct entities:
 - `Na+`, `K+`, `Cl-`, `Glucose`, `H+`, `HCO3-`, `Amino Acids`, `H2O`
 - Each particle has:
@@ -49,55 +75,79 @@ class IonParticle:
 
 ---
 
-### 2. Transporter Layer (Molecular Machines)
+### 2. Transporter Layer (Molecular Machines) - CURRENTLY IMPLEMENTED
 
-Each ion channel/transporter is a state machine that **physically moves particles**.
+Each ion channel/transporter moves ion **counts** between compartments (not individual 3D particles).
 
-**Na-K-ATPase Example:**
+**Na-K-ATPase Example (Current Count-Based Implementation):**
+```gdscript
+func activate():
+	var cell = CompartmentRegistry.get_compartment("kidney.pct.cell")
+	var blood = CompartmentRegistry.get_compartment("kidney.pct.blood")
+
+	var pump_count = 1e6  # Representing 1 million pump cycles
+
+	# Move 3 Na+ per pump from cell → blood
+	cell.sodium -= 3 * pump_count
+	cell.actual_sodium -= 3 * pump_count
+	blood.sodium += 3 * pump_count
+	blood.actual_sodium += 3 * pump_count
+
+	# Move 2 K+ per pump from blood → cell
+	blood.potassium -= 2 * pump_count
+	blood.actual_potassium -= 2 * pump_count
+	cell.potassium += 2 * pump_count
+	cell.actual_potassium += 2 * pump_count
+
+	cell.concentrations_updated.emit()
+	blood.concentrations_updated.emit()
+```
+
+**Aspirational Particle-Based Example (NOT IMPLEMENTED):**
 ```gdscript
 func pump_cycle():
-    if state != READY:
-        return
+	if state != READY:
+		return
 
-    if atp_available < 1:
-        return
+	if atp_available < 1:
+		return
 
-    # Find particles within binding radius
-    var na_particles = find_particles_in_radius("Na+", cell_side, binding_radius)
-    var k_particles = find_particles_in_radius("K+", blood_side, binding_radius)
+	# Find particles within binding radius
+	var na_particles = find_particles_in_radius("Na+", cell_side, binding_radius)
+	var k_particles = find_particles_in_radius("K+", blood_side, binding_radius)
 
-    if na_particles.size() < 3 or k_particles.size() < 3:
-        return  # Not enough substrate
+	if na_particles.size() < 3 or k_particles.size() < 3:
+		return  # Not enough substrate
 
-    # Execute transport
-    for i in range(3):
-        move_particle(na_particles[i], cell → blood)
+	# Execute transport
+	for i in range(3):
+		move_particle(na_particles[i], cell → blood)
 
-    for i in range(2):
-        move_particle(k_particles[i], blood → cell)
+	for i in range(2):
+		move_particle(k_particles[i], blood → cell)
 
-    atp_available -= 1
-    state = CYCLING
+	atp_available -= 1
+	state = CYCLING
 ```
 
 **SGLT2 Example:**
 ```gdscript
 func cotransport_cycle():
-    if state != READY:
-        return
+	if state != READY:
+		return
 
-    # Must bind BOTH substrates
-    var na = find_particle_in_radius("Na+", lumen_side, binding_radius)
-    var glucose = find_particle_in_radius("Glucose", lumen_side, binding_radius)
+	# Must bind BOTH substrates
+	var na = find_particle_in_radius("Na+", lumen_side, binding_radius)
+	var glucose = find_particle_in_radius("Glucose", lumen_side, binding_radius)
 
-    if na == null or glucose == null:
-        return
+	if na == null or glucose == null:
+		return
 
-    # Simultaneous transport (stoichiometry: 1 Na+ : 1 Glucose)
-    move_particle(na, lumen → cell)
-    move_particle(glucose, lumen → cell)
+	# Simultaneous transport (stoichiometry: 1 Na+ : 1 Glucose)
+	move_particle(na, lumen → cell)
+	move_particle(glucose, lumen → cell)
 
-    state = CYCLING
+	state = CYCLING
 ```
 
 **Transporter Properties (from physiology):**
@@ -115,21 +165,21 @@ These are **calculated outputs**, not inputs:
 #### **Electronegativity (Membrane Potential)**
 ```gdscript
 func calculate_membrane_potential(intracellular_field, extracellular_field):
-    # Get ion concentrations from both compartments
-    var k_in = intracellular_field.get_ion_concentration("k")
-    var na_in = intracellular_field.get_ion_concentration("na")
-    var cl_in = intracellular_field.get_ion_concentration("cl")
+	# Get ion concentrations from both compartments
+	var k_in = intracellular_field.get_ion_concentration("k")
+	var na_in = intracellular_field.get_ion_concentration("na")
+	var cl_in = intracellular_field.get_ion_concentration("cl")
 
-    var k_out = extracellular_field.get_ion_concentration("k")
-    var na_out = extracellular_field.get_ion_concentration("na")
-    var cl_out = extracellular_field.get_ion_concentration("cl")
+	var k_out = extracellular_field.get_ion_concentration("k")
+	var na_out = extracellular_field.get_ion_concentration("na")
+	var cl_out = extracellular_field.get_ion_concentration("cl")
 
-    # Goldman-Hodgkin-Katz equation with permeability weighting
-    # P_K : P_Na : P_Cl = 1.0 : 0.04 : 0.45
-    var numerator = (1.0 * k_out) + (0.04 * na_out) + (0.45 * cl_in)
-    var denominator = (1.0 * k_in) + (0.04 * na_in) + (0.45 * cl_out)
+	# Goldman-Hodgkin-Katz equation with permeability weighting
+	# P_K : P_Na : P_Cl = 1.0 : 0.04 : 0.45
+	var numerator = (1.0 * k_out) + (0.04 * na_out) + (0.45 * cl_in)
+	var denominator = (1.0 * k_in) + (0.04 * na_in) + (0.45 * cl_out)
 
-    return 61.5 * log(numerator / denominator) / log(10)  # mV
+	return 61.5 * log(numerator / denominator) / log(10)  # mV
 ```
 
 **Critical Physics:** Membrane potential comes from **ion concentration gradients** weighted by **membrane permeabilities**, NOT from total charge differences. Compartments remain nearly electroneutral (charge difference ~10^-6 of total ions), but concentration gradients create voltage via selective ion flow.
@@ -139,8 +189,8 @@ The Na-K-ATPase creates voltage **by changing ion concentration gradients** (mov
 #### **Concentration**
 ```gdscript
 func get_concentration(substance, voxel):
-    var particle_count = count_particles_of_type(substance, voxel)
-    return particle_count / voxel.volume
+	var particle_count = count_particles_of_type(substance, voxel)
+	return particle_count / voxel.volume
 ```
 
 Concentration IS particle density. No manual gradient setting.
@@ -148,15 +198,15 @@ Concentration IS particle density. No manual gradient setting.
 #### **Flow Along PCT**
 ```gdscript
 class PCTVoxel:
-    var particles: Array[Particle]
-    var flow_velocity: float  # Set by tubular flow rate (from GFR)
+	var particles: Array[Particle]
+	var flow_velocity: float  # Set by tubular flow rate (from GFR)
 
-    func _process(delta):
-        # Particles that reach voxel boundary flow to next segment
-        for particle in particles:
-            if particle.position.x > voxel_end_x:
-                next_voxel.receive_particle(particle)
-                particles.erase(particle)
+	func _process(delta):
+		# Particles that reach voxel boundary flow to next segment
+		for particle in particles:
+			if particle.position.x > voxel_end_x:
+				next_voxel.receive_particle(particle)
+				particles.erase(particle)
 ```
 
 Downstream concentrations emerge from:
@@ -172,8 +222,8 @@ The PCT is divided into **voxels** (3D spatial segments):
 
 ```
 [Glomerulus] → [Early PCT] → [Mid PCT] → [Late PCT] → [Loop of Henle]
-                  ↓ SGLT2        ↓ SGLT1       ↓ Reduced
-                  ↓ NHE3         ↓ NHE3         ↓ transport
+				  ↓ SGLT2        ↓ SGLT1       ↓ Reduced
+				  ↓ NHE3         ↓ NHE3         ↓ transport
 ```
 
 **Each voxel contains:**
@@ -284,42 +334,42 @@ This is true simulation, not animation.
 1. **ElectrochemicalField Class** (`electrochemical_field.gd`)
    - Calculates emergent electrochemical properties from ion particle counts
    - Methods:
-     - `calculate_total_charge()` - Sums charges from all ions in compartment (for debugging/validation)
-     - `calculate_potential_difference(other_field)` - GHK membrane potential between two compartments
-     - `get_ion_concentration(ion_name)` - Converts particle counts to mM concentrations
-     - `calculate_osmolality()` - Total osmotic pressure from all particles
-     - `calculate_resting_potential(external_compartment)` - Goldman-Hodgkin-Katz equation (-70.1 mV)
+	 - `calculate_total_charge()` - Sums charges from all ions in compartment (for debugging/validation)
+	 - `calculate_potential_difference(other_field)` - GHK membrane potential between two compartments
+	 - `get_ion_concentration(ion_name)` - Converts particle counts to mM concentrations
+	 - `calculate_osmolality()` - Total osmotic pressure from all particles
+	 - `calculate_resting_potential(external_compartment)` - Goldman-Hodgkin-Katz equation (-70.1 mV)
    - Uses physical constants (Faraday, Gas constant, body temperature)
    - All calculations use actual particle counts, not debug-scaled values
    - **Physics:** Voltage calculated from ion concentration gradients and permeabilities (GHK), not charge imbalance
 
 2. **PCT Cell Compartment** (`pct_cell.gd`)
    - Physiologically accurate intracellular ion concentrations:
-     - Na+ = 12 mM (low, actively pumped out)
-     - K+ = 140 mM (high, actively pumped in)
-     - Cl- = 7 mM (very low, actively excluded to maintain -70 mV potential)
-     - Glucose = 5 mM
-     - HCO3- = 24 mM
-     - H+ = 63 nM (pH 7.2)
-     - Amino acids = 2 mM
-     - ATP = 5 mM
+	 - Na+ = 12 mM (low, actively pumped out)
+	 - K+ = 140 mM (high, actively pumped in)
+	 - Cl- = 7 mM (very low, actively excluded to maintain -70 mV potential)
+	 - Glucose = 5 mM
+	 - HCO3- = 24 mM
+	 - H+ = 63 nM (pH 7.2)
+	 - Amino acids = 2 mM
+	 - ATP = 5 mM
    - Cell volume = 2 picoliters (2e-12 L)
    - Dual particle count system:
-     - `sodium`, `potassium`, etc. - Display values (scaled in debug mode)
-     - `actual_sodium`, `actual_potassium`, etc. - True physiological particle counts
+	 - `sodium`, `potassium`, etc. - Display values (scaled in debug mode)
+	 - `actual_sodium`, `actual_potassium`, etc. - True physiological particle counts
    - Debug mode: Scales display values by 1.32e-5 (smallest value = 1, ratios preserved)
    - Signal: `concentrations_updated` - Emitted when ion counts change
    - ElectrochemicalField child node for calculations
 
 3. **Architecture Pattern Established**
    - **Generic compartment model**: Any compartment (lumen, cell, blood) can have:
-     - Ion concentration variables
-     - ElectrochemicalField child node
-     - Volume property
+	 - Ion concentration variables
+	 - ElectrochemicalField child node
+	 - Volume property
    - **Separation of concerns**:
-     - Compartments store ion counts
-     - ElectrochemicalField calculates emergent properties
-     - Display manager updates UI
+	 - Compartments store ion counts
+	 - ElectrochemicalField calculates emergent properties
+	 - Display manager updates UI
    - **Debug scaling**: Display values scale for readability, but physics calculations always use actual particle counts
 
 4. **UI Integration**
@@ -338,7 +388,7 @@ This is true simulation, not animation.
 - ✅ **Global CompartmentRegistry for cross-system compartment references**
 - ✅ **Na-K-ATPase functional with ion transport and voltage changes**
 - ✅ **Interactive receptor activation system with UI**
-- ⏳ Lumen compartment not yet implemented
+- ✅ **Lumen compartment implemented with tubular fluid concentrations**
 - ⏳ Other transporters (SGLT2, NHE3, etc.) not yet implemented
 
 **Membrane Potential Details:**
@@ -367,10 +417,10 @@ This is true simulation, not animation.
 
 1. **Generic Compartment Interface Pattern**
    - ANY node can be a compartment by:
-     - Having an ElectrochemicalField child node
-     - Exposing standard ion variables (sodium, potassium, chloride, etc.)
-     - Emitting `concentrations_updated` signal
-     - Having `actual_*` variables for true particle counts
+	 - Having an ElectrochemicalField child node
+	 - Exposing standard ion variables (sodium, potassium, chloride, etc.)
+	 - Emitting `concentrations_updated` signal
+	 - Having `actual_*` variables for true particle counts
    - No inheritance required - uses duck typing/interface approach
    - Compartments can be MeshInstance3D, AnimatedSprite3D, or any node type
 
@@ -380,9 +430,9 @@ This is true simulation, not animation.
    - Signal forwarding: compartment.concentrations_updated → parent.concentrations_updated
    - Volume: 5 picoliters (peritubular capillary segment)
    - Physiological blood plasma concentrations:
-     - Na+ = 140 mM, K+ = 5 mM, Cl- = 110 mM
-     - Glucose = 5 mM, HCO3- = 24 mM, H+ = 40 nM (pH 7.4)
-     - Amino acids = 2.5 mM
+	 - Na+ = 140 mM, K+ = 5 mM, Cl- = 110 mM
+	 - Glucose = 5 mM, HCO3- = 24 mM, H+ = 40 nM (pH 7.4)
+	 - Amino acids = 2.5 mM
 
 3. **Generic Solute Display Manager** (`pct_solute_display_manager.gd`)
    - Changed from hardcoded `pct_cell` reference to generic `compartment_node`
@@ -392,13 +442,13 @@ This is true simulation, not animation.
 
 4. **Scene Structure**
    - BloodVessel (MeshInstance3D)
-     - ElectrochemicalField (Node3D) - calculates emergent properties
-     - SoluteDisplay (Control) - UI display
-       - Solute_Display_Manager - generic display script
+	 - ElectrochemicalField (Node3D) - calculates emergent properties
+	 - SoluteDisplay (Control) - UI display
+	   - Solute_Display_Manager - generic display script
    - PCTCell (AnimatedSprite3D)
-     - ElectrochemicalField (Node3D)
-     - SoluteDisplay (Control)
-       - Solute_Display_Manager - same generic script
+	 - ElectrochemicalField (Node3D)
+	 - SoluteDisplay (Control)
+	   - Solute_Display_Manager - same generic script
 
 **Key Architecture Win:**
 The display manager is now **completely decoupled** from specific compartment types. It works with:
@@ -432,13 +482,13 @@ This is true interface-based programming - no class inheritance, just structural
    - Autoload singleton accessible from anywhere in the project
    - Manages all physiological compartments across all organ systems
    - Methods:
-     - `register(id, compartment)` - Register with full ID (e.g., "kidney.pct.lumen")
-     - `register_scoped(scope, location, compartment)` - Auto-namespacing (e.g., "kidney.pct", "lumen")
-     - `get_compartment(id)` - Retrieve compartment reference by ID
-     - `has_compartment(id)` - Check if compartment exists
-     - `unregister(id)` - Remove compartment (cleanup)
+	 - `register(id, compartment)` - Register with full ID (e.g., "kidney.pct.lumen")
+	 - `register_scoped(scope, location, compartment)` - Auto-namespacing (e.g., "kidney.pct", "lumen")
+	 - `get_compartment(id)` - Retrieve compartment reference by ID
+	 - `has_compartment(id)` - Check if compartment exists
+	 - `unregister(id)` - Remove compartment (cleanup)
    - **Namespace pattern**: `organ.substructure.compartment_type`
-     - Examples: "kidney.pct.cell", "kidney.pct.blood", "heart.left_ventricle.blood"
+	 - Examples: "kidney.pct.cell", "kidney.pct.blood", "heart.left_ventricle.blood"
    - Decouples transporters from hardcoded node paths
    - Enables JSON-driven compartment references
 
@@ -446,9 +496,9 @@ This is true interface-based programming - no class inheritance, just structural
    - Extends IonChannel base class
    - Retrieves cell and blood compartments from registry
    - Moves ions on activation:
-     - 3 Na+ from cell → blood
-     - 2 K+ from blood → cell
-     - Updates both display values and actual particle counts
+	 - 3 Na+ from cell → blood
+	 - 2 K+ from blood → cell
+	 - Updates both display values and actual particle counts
    - Scaled to 10^6 pump cycles per activation (physiologically representative)
    - Emits `concentrations_updated` signals to update UI
    - Includes pulse animation via `super.activate()`
@@ -458,9 +508,9 @@ This is true interface-based programming - no class inheritance, just structural
    - Reads actual K+, Na+, Cl- from blood compartment instead of hardcoded values
    - GHK equation now reflects changes in BOTH cell and blood compartments
    - Voltage changes are more noticeable because:
-     - Cell K+ increases as pumps move K+ in
-     - Blood K+ decreases as pumps extract K+ from blood
-     - Both sides of the equation change simultaneously
+	 - Cell K+ increases as pumps move K+ in
+	 - Blood K+ decreases as pumps extract K+ from blood
+	 - Both sides of the equation change simultaneously
    - Display manager passes blood compartment reference for accurate voltage
 
 4. **Interactive Activation System**
@@ -479,14 +529,14 @@ This is true interface-based programming - no class inheritance, just structural
 
 6. **JSON-Driven Transport Definitions**
    - `pct_channels.json` updated with registry IDs:
-     ```json
-     {
-       "substrate": "Na+",
-       "source": "kidney.pct.cell",
-       "destination": "kidney.pct.blood",
-       "quantity": 3
-     }
-     ```
+	 ```json
+	 {
+	   "substrate": "Na+",
+	   "source": "kidney.pct.cell",
+	   "destination": "kidney.pct.blood",
+	   "quantity": 3
+	 }
+	 ```
    - Future transporters can read from JSON and use registry to find compartments
    - Decouples transport logic from scene structure
 
@@ -507,8 +557,72 @@ This is true interface-based programming - no class inheritance, just structural
 **Next Steps:**
 1. Implement continuous/automatic pumping driven by ATP availability
 2. Add SGLT2, NHE3, and other transporters from JSON
-3. Create lumen compartment and register as "kidney.pct.lumen"
-4. Scale simulation to represent realistic time (e.g., 1 activation = 1 second of pumping)
+3. Scale simulation to represent realistic time (e.g., 1 activation = 1 second of pumping)
+
+---
+
+### Completed: Lumen Compartment Implementation (2025-12-16)
+
+**Files Created:**
+- `Kidney/Scripts/Nephron/pct_lumen.gd` - Lumen compartment with tubular fluid concentrations
+
+**Files Modified:**
+- `Uterus/node_3d.tscn` - Added lumen script and ElectrochemicalField to PCTLumen node
+
+**What Was Built:**
+
+1. **PCT Lumen Compartment** (`pct_lumen.gd`)
+   - Extends Node3D (generic compartment interface)
+   - Registers with CompartmentRegistry as "kidney.pct.lumen"
+   - Volume: 0.28 nanoliters (2.8e-10 L)
+     - Based on PCT lumen diameter ~60 μm, segment length ~100 μm
+     - Volume = π × (30 μm)² × 100 μm ≈ 2.8e-10 L
+   - Physiologically accurate tubular fluid concentrations (glomerular filtrate):
+     - Na+ = 140 mM (matches plasma - ultrafiltrate)
+     - K+ = 5 mM (matches plasma)
+     - Cl- = 110 mM (matches plasma)
+     - Glucose = 5 mM (will be reabsorbed along PCT)
+     - HCO3- = 24 mM
+     - H+ = 40 nM (pH 7.4)
+     - Amino acids = 2.5 mM (will be reabsorbed)
+   - Same debug mode scaling system as other compartments
+   - ElectrochemicalField child node for voltage calculations
+
+2. **Scene Integration**
+   - PCTLumen node already existed in scene with full UI display
+   - Added script reference to PCTLumen node
+   - Added ElectrochemicalField as child node
+   - Lumen display shows ion concentrations and membrane potential
+   - GPU particle system for visual representation of tubular fluid flow
+
+3. **Three-Compartment Model Complete**
+   - **Lumen** (tubular fluid): 0.28 nL, filtrate concentrations
+   - **Cell** (epithelial cytoplasm): 2 pL, intracellular concentrations
+   - **Blood** (peritubular capillary): 5 pL, plasma concentrations
+   - All three registered with CompartmentRegistry
+   - All three have ElectrochemicalField for voltage calculations
+   - All three have UI displays for real-time monitoring
+
+**Physiological Validation:**
+- Lumen volume 140× larger than cell (0.28 nL vs 2 pL) - physiologically accurate
+- Blood volume 2.5× larger than cell (5 pL vs 2 pL) - representative
+- Initial lumen concentrations match plasma (protein-free ultrafiltrate)
+- As transporters activate, lumen concentrations will diverge from blood
+- Glucose/amino acids will be depleted from lumen by reabsorption
+
+**Architecture Benefits:**
+- Ready for apical transporter implementation (SGLT2, NHE3 on lumen→cell interface)
+- Three-compartment electrochemical gradients can now be calculated
+- Apical membrane potential (lumen vs cell) vs basolateral (cell vs blood)
+- Transepithelial potential difference can be computed
+- Foundation for emergent reabsorption modeling
+
+**Next Steps:**
+1. Implement SGLT2 (lumen Na+/glucose → cell)
+2. Implement NHE3 (lumen Na+/H+ exchange → cell)
+3. Implement GLUT2 (cell glucose → blood)
+4. Model transepithelial voltage from apical + basolateral potentials
+5. Simulate concentration changes along PCT as ions/glucose reabsorb
 
 ---
 
