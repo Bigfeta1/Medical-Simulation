@@ -1,0 +1,135 @@
+[gd_scene load_steps=12 format=3 uid="uid://durp35woqbyqg"]
+
+[ext_resource type="Script" uid="uid://cnaaiad47arac" path="res://blood/hemoglobin.gd" id="1_a3htu"]
+[ext_resource type="Script" uid="uid://hf05k5osy7gv" path="res://blood/globulin.gd" id="2_r8ttu"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f3316"]
+transparency = 1
+uv1_scale = Vector3(0.33, 0.33, 0.33)
+uv1_offset = Vector3(0.32, 0.235, 0)
+
+[sub_resource type="SphereMesh" id="SphereMesh_cs2lr"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fd6cj"]
+albedo_color = Color(0.11119685, 0.11119684, 0.11119684, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_rlgfn"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0ijy5"]
+albedo_color = Color(0.2737464, 0.808073, 0.93405807, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r8ttu"]
+transparency = 1
+uv1_scale = Vector3(0.33, 0.33, 0.33)
+uv1_offset = Vector3(0.32, 0.235, 0)
+
+[sub_resource type="SphereMesh" id="SphereMesh_a3htu"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_287ps"]
+transparency = 1
+uv1_scale = Vector3(0.33, 0.33, 0.33)
+uv1_offset = Vector3(0.32, 0.235, 0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rlgfn"]
+transparency = 1
+uv1_scale = Vector3(0.33, 0.33, 0.33)
+uv1_offset = Vector3(0.32, 0.235, 0)
+
+[node name="Hemoglobin" type="Node3D"]
+script = ExtResource("1_a3htu")
+
+[node name="Globulin1" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.14947839, 0, 0.18133177, 0, 0.235, 0, -0.18133177, 0, 0.14947839, 3.918, 3.548, 0)
+material_override = SubResource("StandardMaterial3D_f3316")
+mesh = SubResource("SphereMesh_cs2lr")
+script = ExtResource("2_r8ttu")
+current_globulin_type = 0
+
+[node name="Iron" type="MeshInstance3D" parent="Globulin1"]
+transform = Transform3D(0.4699999, 0, 0, 0, 0.47, 0, 0, 0, 0.4699999, 0.004573822, 0, 0.10341358)
+material_override = SubResource("StandardMaterial3D_fd6cj")
+mesh = SubResource("SphereMesh_rlgfn")
+
+[node name="Oxygen" type="MeshInstance3D" parent="Globulin1"]
+transform = Transform3D(0.16999999, 0, 0, 0, 0.17, 0, 0, 0, 0.16999999, -0.2509203, 0, 0.1935997)
+visible = false
+material_override = SubResource("StandardMaterial3D_0ijy5")
+mesh = SubResource("SphereMesh_rlgfn")
+
+[node name="Oxygen2" type="MeshInstance3D" parent="Globulin1/Oxygen"]
+transform = Transform3D(0.99999976, 0, 1.1920929e-07, 0, 0.9999998, 0, -1.1920929e-07, 0, 0.99999976, 0.40943146, 0, 0.4966812)
+material_override = SubResource("StandardMaterial3D_0ijy5")
+mesh = SubResource("SphereMesh_rlgfn")
+skeleton = NodePath("../..")
+
+[node name="Globulin2" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.14947839, 0, 0.18133177, 0, 0.235, 0, -0.18133177, 0, 0.14947839, 4.131, 3.493, -0.044)
+material_override = SubResource("StandardMaterial3D_r8ttu")
+mesh = SubResource("SphereMesh_a3htu")
+script = ExtResource("2_r8ttu")
+current_globulin_type = 0
+
+[node name="Iron" type="MeshInstance3D" parent="Globulin2"]
+transform = Transform3D(0.4699999, 0, 0, 0, 0.47, 0, 0, 0, 0.4699999, 0.004573822, 0, 0.10341358)
+material_override = SubResource("StandardMaterial3D_fd6cj")
+mesh = SubResource("SphereMesh_rlgfn")
+
+[node name="Oxygen" type="MeshInstance3D" parent="Globulin2"]
+transform = Transform3D(0.16999999, 0, 0, 0, 0.17, 0, 0, 0, 0.16999999, -0.2351389, 0, 0.18058968)
+visible = false
+material_override = SubResource("StandardMaterial3D_0ijy5")
+mesh = SubResource("SphereMesh_rlgfn")
+
+[node name="Oxygen2" type="MeshInstance3D" parent="Globulin2/Oxygen"]
+transform = Transform3D(0.99999976, 0, 1.1920929e-07, 0, 0.9999998, 0, -1.1920929e-07, 0, 0.99999976, 0.40943146, 0, 0.4966812)
+material_override = SubResource("StandardMaterial3D_0ijy5")
+mesh = SubResource("SphereMesh_rlgfn")
+skeleton = NodePath("../..")
+
+[node name="Globulin3" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.235, 0, 0, 0, 0.235, 0, 0, 0, 0.235, 3.9558303, 3.3646867, -0.10062435)
+material_override = SubResource("StandardMaterial3D_287ps")
+mesh = SubResource("SphereMesh_a3htu")
+script = ExtResource("2_r8ttu")
+current_globulin_type = 1
+
+[node name="Iron" type="MeshInstance3D" parent="Globulin3"]
+transform = Transform3D(0.47, 0, 0, 0, 0.47, 0, 0, 0, 0.47, -0.10845375, 0, 0.14287359)
+material_override = SubResource("StandardMaterial3D_fd6cj")
+mesh = SubResource("SphereMesh_rlgfn")
+
+[node name="Oxygen" type="MeshInstance3D" parent="Globulin3"]
+transform = Transform3D(0.09134092, 0, 0.14337654, 0, 0.17, 0, -0.14337654, 0, 0.09134092, -0.037672043, 0, 0.32089886)
+visible = false
+material_override = SubResource("StandardMaterial3D_0ijy5")
+mesh = SubResource("SphereMesh_rlgfn")
+
+[node name="Oxygen2" type="MeshInstance3D" parent="Globulin3/Oxygen"]
+transform = Transform3D(0.99999976, 0, 1.1920929e-07, 0, 0.9999998, 0, -1.1920929e-07, 0, 0.99999976, 0.40943146, 0, 0.4966812)
+material_override = SubResource("StandardMaterial3D_0ijy5")
+mesh = SubResource("SphereMesh_rlgfn")
+skeleton = NodePath("../..")
+
+[node name="Globulin4" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.14947839, 0, 0.18133177, 0, 0.235, 0, -0.18133177, 0, 0.14947839, 4.161, 3.307, -0.016392589)
+material_override = SubResource("StandardMaterial3D_rlgfn")
+mesh = SubResource("SphereMesh_a3htu")
+script = ExtResource("2_r8ttu")
+current_globulin_type = 1
+
+[node name="Iron" type="MeshInstance3D" parent="Globulin4"]
+transform = Transform3D(0.4699999, 0, 0, 0, 0.47, 0, 0, 0, 0.4699999, 0.004573822, 0, 0.10341358)
+material_override = SubResource("StandardMaterial3D_fd6cj")
+mesh = SubResource("SphereMesh_rlgfn")
+
+[node name="Oxygen" type="MeshInstance3D" parent="Globulin4"]
+transform = Transform3D(0.16999999, 0, 0, 0, 0.17, 0, 0, 0, 0.16999999, -0.21409702, 0, 0.16324139)
+visible = false
+material_override = SubResource("StandardMaterial3D_0ijy5")
+mesh = SubResource("SphereMesh_rlgfn")
+
+[node name="Oxygen2" type="MeshInstance3D" parent="Globulin4/Oxygen"]
+transform = Transform3D(0.99999976, 0, 1.1920929e-07, 0, 0.9999998, 0, -1.1920929e-07, 0, 0.99999976, 0.40943146, 0, 0.4966812)
+material_override = SubResource("StandardMaterial3D_0ijy5")
+mesh = SubResource("SphereMesh_rlgfn")
+skeleton = NodePath("../..")

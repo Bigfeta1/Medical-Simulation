@@ -1,0 +1,186 @@
+{
+	"apical": {
+		"SGLT2": {
+			"full_name": "Sodium-Glucose Cotransporter 2",
+			"description": "Reabsorbs glucose and sodium from the filtrate in the proximal convoluted tubule. Responsible for approximately 90% of glucose reabsorption in the kidney.",
+			"transports": [
+				{
+					"substrate": "Na+",
+					"source": "lumen",
+					"destination": "cell",
+					"quantity": 1
+				},
+				{
+					"substrate": "Glucose",
+					"source": "lumen",
+					"destination": "cell",
+					"quantity": 1
+				}
+			]
+		},
+		"NHE3": {
+			"full_name": "Na+/H+ Exchanger 3",
+			"description": "Primary sodium-hydrogen antiporter in the proximal tubule. Exchanges intracellular H+ for extracellular Na+, playing a crucial role in sodium reabsorption and acid-base balance.",
+			"transports": [
+				{
+					"substrate": "Na+",
+					"source": "lumen",
+					"destination": "cell",
+					"quantity": 1
+				},
+				{
+					"substrate": "H+",
+					"source": "cell",
+					"destination": "lumen",
+					"quantity": 1
+				}
+			]
+		},
+		"Chloride_Base_Exchanger": {
+			"full_name": "Chloride/Base Exchanger",
+			"description": "Anion exchanger that facilitates chloride reabsorption in exchange for intracellular base (typically bicarbonate or formate).",
+			"transports": [
+				{
+					"substrate": "Cl-",
+					"source": "lumen",
+					"destination": "cell",
+					"quantity": 1
+				},
+				{
+					"substrate": "HCO3-",
+					"source": "cell",
+					"destination": "lumen",
+					"quantity": 1
+				}
+			]
+		},
+		"NBC1": {
+			"full_name": "Sodium-Bicarbonate Cotransporter 1",
+			"description": "Cotransporter that reabsorbs sodium and bicarbonate from the tubular fluid, essential for bicarbonate reclamation and acid-base homeostasis.",
+			"transports": [
+				{
+					"substrate": "Na+",
+					"source": "lumen",
+					"destination": "cell",
+					"quantity": 1
+				},
+				{
+					"substrate": "HCO3-",
+					"source": "lumen",
+					"destination": "cell",
+					"quantity": 3
+				}
+			]
+		},
+		"Amino_Acid_Transporters": {
+			"full_name": "Amino Acid Transporters",
+			"description": "Various sodium-coupled amino acid transporters that reabsorb amino acids from the filtrate. Multiple transporter subtypes handle different classes of amino acids.",
+			"transports": [
+				{
+					"substrate": "Na+",
+					"source": "lumen",
+					"destination": "cell",
+					"quantity": 1
+				},
+				{
+					"substrate": "Amino Acids",
+					"source": "lumen",
+					"destination": "cell",
+					"quantity": 1
+				}
+			]
+		}
+	},
+	"basolateral": {
+		"Na_K_ATPase": {
+			"full_name": "Na+/K+-ATPase",
+			"description": "Primary active transporter that maintains the sodium gradient essential for proximal tubule function. Pumps 3 sodium ions out and 2 potassium ions in per ATP hydrolyzed, creating the electrochemical gradient that drives secondary active transport.",
+			"transports": [
+				{
+					"substrate": "Na+",
+					"source": "cell",
+					"destination": "blood",
+					"quantity": 3
+				},
+				{
+					"substrate": "K+",
+					"source": "blood",
+					"destination": "cell",
+					"quantity": 2
+				},
+				{
+					"substrate": "ATP",
+					"source": "cell",
+					"destination": "consumed",
+					"quantity": 1
+				}
+			]
+		},
+		"GLUT2": {
+			"full_name": "Glucose Transporter 2",
+			"description": "Facilitated glucose transporter on the basolateral membrane that allows glucose to exit the cell into the blood after reabsorption from the apical side via SGLT2.",
+			"transports": [
+				{
+					"substrate": "Glucose",
+					"source": "cell",
+					"destination": "blood",
+					"quantity": 1
+				}
+			]
+		},
+		"KCC": {
+			"full_name": "K+-Cl- Cotransporter",
+			"description": "Electroneutral cotransporter that moves potassium and chloride together across the basolateral membrane, contributing to cell volume regulation and chloride reabsorption.",
+			"transports": [
+				{
+					"substrate": "K+",
+					"source": "cell",
+					"destination": "blood",
+					"quantity": 1
+				},
+				{
+					"substrate": "Cl-",
+					"source": "cell",
+					"destination": "blood",
+					"quantity": 1
+				}
+			]
+		},
+		"NBCe1": {
+			"full_name": "Electrogenic Na+-HCO3- Cotransporter 1",
+			"description": "Basolateral transporter that moves bicarbonate and sodium from the cell into the blood. Critical for bicarbonate reabsorption and maintaining acid-base balance.",
+			"transports": [
+				{
+					"substrate": "Na+",
+					"source": "cell",
+					"destination": "blood",
+					"quantity": 1
+				},
+				{
+					"substrate": "HCO3-",
+					"source": "cell",
+					"destination": "blood",
+					"quantity": 3
+				}
+			]
+		},
+		"Protein_Channels": {
+			"full_name": "Protein/Peptide Transporters",
+			"description": "Basolateral transport mechanisms for moving amino acids and small peptides from the cell into the blood following their reabsorption from the tubular lumen.",
+			"transports": [
+				{
+					"substrate": "Amino Acids",
+					"source": "cell",
+					"destination": "blood",
+					"quantity": 1
+				},
+				{
+					"substrate": "Peptides",
+					"source": "cell",
+					"destination": "blood",
+					"quantity": 1
+				}
+			]
+		}
+	}
+}

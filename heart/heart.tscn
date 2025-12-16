@@ -1,0 +1,102 @@
+[gd_scene load_steps=3 format=3 uid="uid://ckjwardv30v5j"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m63af"]
+bg_color = Color(0.6, 0.6, 0.6, 0.0980392)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.051971, 0.051971, 0.0519709, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_21vk0"]
+font_size = 50
+
+[node name="Heart" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1919.0
+offset_bottom = 1080.0
+
+[node name="Logic" type="Node" parent="."]
+
+[node name="ElectricalSystem" type="Node" parent="Logic"]
+
+[node name="SANode" type="Node" parent="Logic/ElectricalSystem"]
+
+[node name="AVNode" type="Node" parent="Logic/ElectricalSystem"]
+
+[node name="BundleofHis" type="Node" parent="Logic/ElectricalSystem"]
+
+[node name="LeftBundle" type="Node" parent="Logic/ElectricalSystem"]
+
+[node name="LeftPurkinje" type="Node" parent="Logic/ElectricalSystem/LeftBundle"]
+
+[node name="RightBundle" type="Node" parent="Logic/ElectricalSystem"]
+
+[node name="RightPurkinje" type="Node" parent="Logic/ElectricalSystem/RightBundle"]
+
+[node name="ChamberPressures" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 415.0
+offset_top = 288.0
+offset_right = -1104.0
+offset_bottom = -392.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Outline" type="Panel" parent="ChamberPressures"]
+layout_mode = 1
+offset_right = 400.0
+offset_bottom = 400.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_m63af")
+
+[node name="VerticalLine" type="Panel" parent="ChamberPressures/Outline"]
+layout_mode = 0
+offset_left = 200.0
+offset_right = 206.0
+offset_bottom = 400.0
+
+[node name="HorizontalLine" type="Panel" parent="ChamberPressures/Outline"]
+layout_mode = 0
+offset_top = 200.0
+offset_right = 400.0
+offset_bottom = 206.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ChamberPressures"]
+layout_mode = 0
+offset_left = 46.0
+offset_top = 62.0
+offset_right = 111.0
+offset_bottom = 320.0
+theme_override_constants/separation = 155
+
+[node name="RightHeart" type="VBoxContainer" parent="ChamberPressures/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 120
+
+[node name="RALabel" type="Label" parent="ChamberPressures/HBoxContainer/RightHeart"]
+layout_mode = 2
+text = "RA"
+label_settings = SubResource("LabelSettings_21vk0")
+
+[node name="RVLabel" type="Label" parent="ChamberPressures/HBoxContainer/RightHeart"]
+layout_mode = 2
+text = "RV"
+label_settings = SubResource("LabelSettings_21vk0")
+
+[node name="LeftHeart" type="VBoxContainer" parent="ChamberPressures/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 120
+
+[node name="LALabel" type="Label" parent="ChamberPressures/HBoxContainer/LeftHeart"]
+layout_mode = 2
+text = "LA"
+label_settings = SubResource("LabelSettings_21vk0")
+
+[node name="LVLabel" type="Label" parent="ChamberPressures/HBoxContainer/LeftHeart"]
+layout_mode = 2
+text = "LV"
+label_settings = SubResource("LabelSettings_21vk0")

@@ -1,0 +1,50 @@
+[gd_scene load_steps=6 format=3 uid="uid://yuuyrryskn11"]
+
+[ext_resource type="Script" uid="uid://dmb5f6oyb7u04" path="res://scripts/UterusController.gd" id="1_o6pau"]
+[ext_resource type="Script" uid="uid://bjtsa7gals08x" path="res://Uterus/fetal_heart_tracing.gd" id="2_v0i7m"]
+[ext_resource type="Script" uid="uid://vj7i57i6a2tv" path="res://Uterus/cervical_display.gd" id="3_l6mtd"]
+[ext_resource type="Script" uid="uid://cjb0hn0a2peqp" path="res://Uterus/diagnoser.gd" id="4_c2dsp"]
+[ext_resource type="Script" uid="uid://bf3l7lcq7cju7" path="res://Uterus/fetus.gd" id="5_cufwg"]
+
+[node name="UterusController" type="Node3D"]
+script = ExtResource("1_o6pau")
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_top = 323.0
+offset_right = 40.0
+offset_bottom = 363.0
+script = ExtResource("2_v0i7m")
+
+[node name="CervicalDisplay" type="TextureRect" parent="UI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1538.0
+offset_top = 533.0
+offset_right = 1538.0
+offset_bottom = 533.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(5.40322, 4.39322)
+script = ExtResource("3_l6mtd")
+
+[node name="CervicalViewport" type="SubViewport" parent="UI/CervicalDisplay"]
+
+[node name="CervicalCamera" type="Camera3D" parent="UI/CervicalDisplay/CervicalViewport"]
+transform = Transform3D(1, 0, 0, 0, -0.544698, -0.838633, 0, 0.838633, -0.544698, 0, 0.231772, -0.258911)
+
+[node name="maternal_contractions" type="Line2D" parent="UI"]
+position = Vector2(0, 200)
+points = PackedVector2Array(-1, -1)
+
+[node name="fetal_hr" type="Line2D" parent="UI"]
+
+[node name="Diagnoser" type="Node3D" parent="."]
+script = ExtResource("4_c2dsp")
+
+[node name="fetus_controller" type="Node3D" parent="."]
+script = ExtResource("5_cufwg")
+uterus_controller_path = NodePath("..")
