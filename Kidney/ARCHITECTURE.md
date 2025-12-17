@@ -1134,12 +1134,13 @@ membrane_potential += delta_v_mv
    - Positive current = inward positive charge = depolarizing
    - Negative current = outward positive charge = hyperpolarizing
 
-3. **Very Weak Passive Leak Current**
-   - Extremely weak leak (R_m = 100 GΩ) prevents unbounded voltage drift
-   - At ΔV = 1 mV: I_leak = 0.01 pA (160× weaker than SGLT2 current ~1.6 pA)
-   - Provides gentle restoring force toward GHK equilibrium
-   - Transporter currents still dominate voltage dynamics
-   - **Future adjustment**: May need tuning based on observed voltage drift rates
+3. **No Passive Leak Current (Correct Physics)**
+   - Removed all passive leak current (R_m = ∞)
+   - Voltage is ONLY changed by active transporter currents
+   - Voltage will drift indefinitely without Na-K-ATPase pumping - this is correct!
+   - Any significant leak acts as a "free energy source" that bypasses ATP requirement
+   - **Critical point**: Leak would allow gradient maintenance without ATP cost (unphysical)
+   - **Future consideration**: May add extremely weak leak (R_m > 1 TΩ) for numerical stability only, but must be negligible compared to transporter currents
 
 4. **GHK as Reference Target**
    - GHK still calculated each frame
@@ -1257,18 +1258,40 @@ GHK depends on concentration ratios:
 | SGLT2 current | ~1.6 pA | ~1-2 pA per transporter | ✅ |
 | Na-K-ATPase current | ~1.6 pA net | ~1-2 pA per pump | ✅ |
 | Voltage change per cycle | ~0.02 mV | ~0.01-0.03 mV | ✅ |
-| Leak resistance | 100 GΩ | Varies widely (10-1000 GΩ) | ✅ |
-| Leak current at 1 mV | 0.01 pA | Negligible vs transporters | ✅ |
+| Leak resistance | ∞ (no leak) | - | ✅ (see note) |
+| Leak current | 0 A | - | ✅ (see note) |
 
-**Why Very Weak Leak Current:**
+**Why No Leak Current (Critical Design Decision):**
 
-We use an extremely weak passive leak current (R_m = 100 GΩ):
-1. Without any leak, voltage would drift indefinitely (unphysical)
-2. With strong leak (R_m = 1 GΩ), voltage immediately relaxed to GHK, obscuring transporter effects
-3. R_m = 100 GΩ provides gentle restoring force without dominating transporter currents
-4. Leak current at ΔV = 1 mV: 0.01 pA vs SGLT2 current: 1.6 pA (160× weaker)
-5. Maximizes visibility of SGLT2 depolarization while preventing runaway voltage
-6. **Caveat**: This value may need adjustment as we add more transporters and observe long-term voltage stability
+We removed all passive leak current for correct biophysical modeling:
+
+1. **The Fundamental Problem**: Any significant leak acts as a "free energy source"
+   - If leak is strong enough to balance SGLT2 influx, it maintains gradients without ATP cost
+   - This makes Na-K-ATPase unnecessary (wrong!)
+   - Biology requires ATP-dependent pumping to maintain gradients
+
+2. **Unbounded Voltage Drift Is Correct**
+   - Without Na-K-ATPase pumping, voltage SHOULD drift indefinitely
+   - The drift signals that active pumping is required
+   - This is not a bug - it's the correct emergent behavior
+
+3. **What We Observed**
+   - With R_m = 100 GΩ, voltage stabilized at -64 mV (6 mV drift from GHK)
+   - System found equilibrium where leak current balanced SGLT2 current
+   - No ATP required to maintain gradient - physically incorrect!
+
+4. **Correct Behavior Without Leak**
+   - SGLT2 fires → voltage depolarizes continuously
+   - Voltage drifts from -70 mV → -60 mV → -50 mV → ...
+   - Eventually voltage drift reduces SGLT2 thermodynamic driving force
+   - User must fire Na-K-ATPase (ATP-dependent) to restore gradient
+   - ATP depletion → no pump → no gradient restoration → cell death (emergent pathology)
+
+5. **Future Consideration**
+   - May add extremely weak leak (R_m > 1 TΩ, giving I_leak << 0.01 pA) for numerical stability only
+   - Must be verified that leak doesn't create equilibrium without pumping
+   - Leak should be negligible even after hours of simulation time
+   - Alternative: Implement voltage clamps as safety bounds instead of leak current
 
 **Emergent Behavior Now Possible:**
 

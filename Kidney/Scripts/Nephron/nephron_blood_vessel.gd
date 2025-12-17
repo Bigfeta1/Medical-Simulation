@@ -13,6 +13,8 @@ var glucose: int = 0
 var water: int = 0
 var bicarbonate: int = 0
 var protons: int = 0
+var co2: int = 0
+var carbonic_acid: int = 0
 
 var actual_sodium: float = 0
 var actual_potassium: float = 0
@@ -22,6 +24,8 @@ var actual_glucose: float = 0
 var actual_water: float = 0
 var actual_bicarbonate: float = 0
 var actual_protons: float = 0
+var actual_co2: float = 0
+var actual_carbonic_acid: float = 0
 
 var volume: float = 5e-12
 
@@ -51,6 +55,15 @@ func _initialize_concentrations():
 	set_concentration("bicarbonate", 24.0) # 24 mM - plasma HCO3-
 	set_concentration("protons", 0.00004)  # 40 nM (pH 7.4, slightly more basic than cell)
 	set_concentration("amino_acids", 2.5)  # 2.5 mM - plasma amino acids
+
+	# Water in blood plasma (~93% water by volume)
+	set_concentration("water", 51000.0)    # 51 M - plasma water
+
+	# CO2 in blood (arterial PCO2 = 40 mmHg)
+	set_concentration("co2", 1.2)          # 1.2 mM - dissolved CO2
+
+	# Carbonic Acid (very low, transient)
+	set_concentration("carbonic_acid", 0.0003)  # 0.3 μM
 
 	concentrations_updated.emit()
 
@@ -84,3 +97,9 @@ func set_concentration(ion_name: String, concentration_mM: float):
 		"water", "h2o":
 			actual_water = actual_count
 			water = display_count
+		"co2", "carbon_dioxide":
+			actual_co2 = actual_count
+			co2 = display_count
+		"carbonic_acid", "h2co3":
+			actual_carbonic_acid = actual_count
+			carbonic_acid = display_count

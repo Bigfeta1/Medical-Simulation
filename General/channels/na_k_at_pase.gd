@@ -41,13 +41,13 @@ const STATE_DURATIONS = {
 }
 
 # Pump cycle count per activation (representing multiple pumps)
-# Real PCT cell has ~30 million Na-K-ATPase pumps on basolateral membrane
+# Real PCT cell has ~30 million Na-K-ATPase pumps on basolateral membrane (MOST abundant!)
 # Each cycles at ~60 Hz (60 cycles/second)
 # Total flux = 30e6 × 60 × 3 Na+ = 5.4e9 Na+/second out of cell
 # For 60 FPS simulation: flux_per_frame = 5.4e9 / 60 = 9e7 Na+ per frame
-# But we want discrete activations, so: pump_count = realistic number of pumps firing per activation
-# Use 30,000 pumps per activation (represents 0.1% of total pumps firing)
-var pump_count = 3e4  # Reduced from 1e6 for realistic timescales, matches SGLT2 scaling
+# For discrete activations, represent a batch firing: use 10^6 pumps cycling once
+# This gives 3 million Na+ transported per activation (much higher than SGLT2/NHE3)
+var pump_count = 1e6  # 1 million pumps per cycle (highest abundance, drives all gradients)
 
 # Compartment references (cached)
 var cell = null

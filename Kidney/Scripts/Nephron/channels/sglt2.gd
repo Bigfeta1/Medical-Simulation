@@ -29,10 +29,13 @@ const STATE_DURATIONS = {
 }
 
 # Transport count per activation (representing multiple transporters)
-# Real PCT cell has ~500 SGLT2, each cycling at ~150 s^-1
-# Each simulation cycle should represent: 500 transporters × 1 ion each = 500 ions
-# But we batch them: 500 × 100 = 50,000 for performance (still 20x less than before)
-var transport_count = 5e4  # Reduced from 1e6 for realistic timescales
+# Real PCT cell has ~10^6 SGLT2 transporters (range: 10^5 to 10^7)
+# Each cycles at ~150 s^-1
+# Each transporter moves 1 Na+ + 1 Glucose per cycle (stoichiometry)
+#
+# Total transporters per cell: ~1 million
+# When activated, each transporter binds and moves 1 Na+ and 1 Glucose
+var transport_count = 1e6  # 1 million transporters per PCT cell
 
 # ============================================================================
 # THERMODYNAMIC CONSTANTS (Publication-Grade Biophysics)

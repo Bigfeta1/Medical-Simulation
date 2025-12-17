@@ -12,9 +12,14 @@ extends Node
 
 @onready var water_label = get_parent().get_node("Column1/VBoxContainer/AcidBase/WaterLabel")
 @onready var carbon_dioxide_label = get_parent().get_node("Column1/VBoxContainer/AcidBase/CarbonDioxideLabel")
+@onready var carbonic_acid_label = get_parent().get_node("Column1/VBoxContainer/AcidBase/CarbonicAcidLabel")
+
 @onready var proton_label = get_parent().get_node("Column1/VBoxContainer/AcidBase2/ProtonLabel")
+@onready var bicarbonate_label = get_parent().get_node("Column1/VBoxContainer/AcidBase2/BicarbonateLabel")
+
 
 @onready var membrane_potential_label = get_parent().get_node("Column2/VBoxContainer/Electrochemical/VoltageLabel")
+
 
 func _ready():
 	kidney.state_changed.connect(_on_state_changed)
@@ -33,7 +38,11 @@ func _update_display():
 
 	water_label.text = "H20: " + str(compartment_node.water)
 	carbon_dioxide_label.text = "CO2: " + str(compartment_node.water)
+	carbonic_acid_label.text = "Carbonic Acid: " + str(compartment_node.carbonic_acid)
+	
 	proton_label.text = "H+: " + str(compartment_node.protons)
+	bicarbonate_label.text = "Bicarbonate: " + str(compartment_node.bicarbonate)
+
 
 	if compartment_node.electrochemical_field and membrane_potential_label:
 		# Show dynamic membrane potential (not just GHK equilibrium)

@@ -52,17 +52,12 @@ func _process(delta):
 	if is_nan(membrane_potential) or is_inf(membrane_potential):
 		membrane_potential = ghk_potential
 
-	# Very weak passive leak current prevents unbounded voltage drift
-	# This represents tiny K+/Cl-/Na+ leak through lipid bilayer (not channels)
-	# The Na-K-ATPase must actively maintain gradients against SGLT2 influx
-	# Use extremely high R_m = 100 GΩ (extremely weak leak) so voltage can drift significantly
-	var membrane_resistance = 1e11  # Ohms (100 GΩ - 100x weaker than before)
-	var voltage_diff_mv = membrane_potential - ghk_potential  # mV
-	var voltage_diff_volts = voltage_diff_mv / 1000.0  # Convert mV to V
-	var relaxation_current = -voltage_diff_volts / membrane_resistance  # Amperes (Ohm's law)
-
-	# Total current = transporter currents + very weak relaxation to GHK
-	var net_current = total_current + relaxation_current
+	# No passive leak current - voltage is purely determined by transporter currents
+	# The Na-K-ATPase MUST actively pump to maintain gradients against SGLT2 influx
+	# Voltage will drift indefinitely without pump activity - this is correct!
+	# The drift signals that active pumping is required (ATP-dependent)
+	# Any significant leak would act as a "free energy source" bypassing ATP requirement
+	var net_current = total_current
 	var delta_v_mv = 0.0
 
 	# Integrate membrane current to update voltage dynamically
