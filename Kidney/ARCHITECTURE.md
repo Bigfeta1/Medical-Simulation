@@ -389,7 +389,7 @@ This is true simulation, not animation.
 - ✅ **Na-K-ATPase functional with ion transport and voltage changes**
 - ✅ **Interactive receptor activation system with UI**
 - ✅ **Lumen compartment implemented with tubular fluid concentrations**
-- ⏳ Other transporters (SGLT2, NHE3, etc.) not yet implemented
+- ✅ **SGLT2 with thermodynamic coupling to Na-K-ATPase gradients**
 
 **Membrane Potential Details:**
 - Uses Goldman-Hodgkin-Katz (GHK) equation for physiological accuracy
@@ -555,9 +555,10 @@ This is true interface-based programming - no class inheritance, just structural
 - Continuous pumping would be needed for significant physiological effect
 
 **Next Steps:**
-1. Implement continuous/automatic pumping driven by ATP availability
-2. Add SGLT2, NHE3, and other transporters from JSON
-3. Scale simulation to represent realistic time (e.g., 1 activation = 1 second of pumping)
+1. ✅ **COMPLETED**: Thermodynamically-driven SGLT2 transport (see below)
+2. Implement continuous/automatic Na-K-ATPase pumping driven by ATP availability
+3. Add NHE3, GLUT2, and other transporters with thermodynamic coupling
+4. Scale simulation to represent realistic time (e.g., 1 activation = 1 second of pumping)
 
 ---
 

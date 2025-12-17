@@ -11,14 +11,85 @@ const GAS_CONSTANT = 8.314  # J/(mol·K)
 const TEMPERATURE = 310.15  # Body temperature (37°C) in Kelvin
 const ELEMENTARY_CHARGE = 1.602e-19  # Coulombs
 
+# Membrane electrical properties
+const MEMBRANE_CAPACITANCE = 1e-8  # F (10 nF = 10^-8 F)
+# C_m = 1 µF/cm² × membrane area
+# We're simulating ~50,000 transporters = significant membrane area
+# For whole PCT cell: ~1000 µm² → 1 nF
+# Scaled up 10× to 10 nF for numerical stability at 60 FPS
+# tau = R_m × C_m should be ~10-100 ms for stable integration
+
 # Compartment volume (in liters) - set by parent
 var volume: float = 0.0
 
 # Reference to parent compartment that stores ion concentrations
 var parent_compartment = null
 
+# Dynamic membrane potential (mV)
+var membrane_potential: float = -70.0  # Initialize to typical resting potential
+
+# Current tracking (Amperes)
+var total_current: float = 0.0
+var transporter_currents: Dictionary = {}  # {"sglt2": I_sglt2, "pump": I_pump, ...}
+
 func _ready():
 	parent_compartment = get_parent()
+	# Initialize membrane potential to GHK resting value
+	if parent_compartment and parent_compartment.has_method("get"):
+		# Wait one frame for compartments to initialize
+		await get_tree().process_frame
+		membrane_potential = calculate_resting_potential()
+
+func _process(delta):
+	# Calculate GHK resting potential (equilibrium target)
+	var ghk_potential = calculate_resting_potential()
+
+	# Safety check for invalid GHK
+	if is_nan(ghk_potential) or is_inf(ghk_potential):
+		ghk_potential = -70.0  # Default fallback
+
+	# Safety check for invalid membrane potential
+	if is_nan(membrane_potential) or is_inf(membrane_potential):
+		membrane_potential = ghk_potential
+
+	# No passive leak current - voltage is purely determined by transporter currents
+	# The Na-K-ATPase must actively maintain gradients against SGLT2 influx
+	# Voltage will drift indefinitely without pump activity
+	var net_current = total_current
+	var delta_v_mv = 0.0
+
+	# Integrate membrane current to update voltage dynamically
+	# dV/dt = I_total / C_m
+	if net_current != 0.0 and not is_nan(net_current) and not is_inf(net_current):
+		var dv_dt = net_current / MEMBRANE_CAPACITANCE  # V/s
+		var delta_v_volts = dv_dt * delta  # V
+		delta_v_mv = delta_v_volts * 1000.0  # mV
+		membrane_potential += delta_v_mv
+
+	# Clamp final voltage to physiological range (-200 to +100 mV) as safety
+	membrane_potential = clamp(membrane_potential, -200.0, 100.0)
+
+	# Periodic voltage summary (every 3 seconds) - only for cell compartment
+	if Engine.get_process_frames() % 180 == 0 and parent_compartment and parent_compartment.name == "PCTCell":
+		print("[Cell Voltage] V_m = %.3f mV | GHK = %.3f mV | Drift = %.3f mV" % [membrane_potential, ghk_potential, membrane_potential - ghk_potential])
+
+	# Reset current accumulator each frame
+	total_current = 0.0
+	transporter_currents.clear()
+
+## Register current from an active transporter
+## transporter_name: identifier (e.g., "sglt2", "na_k_pump")
+## ion_flux: net charge movement (particles/second)
+## charge_per_ion: elementary charges (+1 for Na+, -1 for Cl-, etc.)
+## positive current = inward positive / outward negative (depolarizing)
+## negative current = outward positive / inward negative (hyperpolarizing)
+func add_transporter_current(transporter_name: String, ion_flux: float, charge_per_ion: float):
+	# Convert ion flux to current
+	# I = (ions/s) × (charge/ion) × (elementary_charge)
+	var current_amperes = ion_flux * charge_per_ion * ELEMENTARY_CHARGE
+
+	transporter_currents[transporter_name] = current_amperes
+	total_current += current_amperes
 
 ## Calculate total charge in compartment (in Coulombs)
 ## Uses actual particle counts (not debug-scaled values)
@@ -118,11 +189,19 @@ func get_ion_concentration(ion_name: String) -> float:
 		"water", "h2o":
 			particle_count = parent_compartment.actual_water
 
+	# Safety check for invalid particle counts
+	if particle_count < 0 or is_nan(particle_count) or is_inf(particle_count):
+		return 0.0
+
 	# Convert particle count to concentration (mM)
 	# particle_count is in actual particles, need to convert to mM
 	# mM = (particles / Avogadro) / volume_L * 1000
 	var moles = particle_count / 6.022e23
 	var concentration_mM = (moles / volume) * 1000.0
+
+	# Safety check for invalid concentration
+	if is_nan(concentration_mM) or is_inf(concentration_mM):
+		return 0.0
 
 	return concentration_mM
 

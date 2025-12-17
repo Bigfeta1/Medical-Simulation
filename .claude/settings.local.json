@@ -3,7 +3,9 @@
     "allow": [
       "Bash(python3:*)",
       "Read(//mnt/g/Godot/**)",
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "Bash(tac:*)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []

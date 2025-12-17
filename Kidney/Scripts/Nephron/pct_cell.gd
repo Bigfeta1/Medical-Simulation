@@ -52,9 +52,10 @@ func _ready():
 	_initialize_concentrations()
 
 func _initialize_concentrations():
-	set_concentration("sodium", 12.0)
-	set_concentration("potassium", 140.0)
-	set_concentration("chloride", 7.0)
+	# Pre-loaded steady-state concentrations (as if pump has been running)
+	set_concentration("sodium", 12.0)      # Low - pumped out by Na-K-ATPase
+	set_concentration("potassium", 140.0)  # High - pumped in by Na-K-ATPase
+	set_concentration("chloride", 7.0)     # Low - to maintain -70 mV
 	set_concentration("glucose", 5.0)
 	set_concentration("bicarbonate", 24.0)
 	set_concentration("protons", 0.000063)

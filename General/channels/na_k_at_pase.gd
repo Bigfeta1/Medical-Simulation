@@ -41,7 +41,13 @@ const STATE_DURATIONS = {
 }
 
 # Pump cycle count per activation (representing multiple pumps)
-var pump_count = 1e6
+# Real PCT cell has ~30 million Na-K-ATPase pumps on basolateral membrane
+# Each cycles at ~60 Hz (60 cycles/second)
+# Total flux = 30e6 × 60 × 3 Na+ = 5.4e9 Na+/second out of cell
+# For 60 FPS simulation: flux_per_frame = 5.4e9 / 60 = 9e7 Na+ per frame
+# But we want discrete activations, so: pump_count = realistic number of pumps firing per activation
+# Use 30,000 pumps per activation (represents 0.1% of total pumps firing)
+var pump_count = 3e4  # Reduced from 1e6 for realistic timescales, matches SGLT2 scaling
 
 # Compartment references (cached)
 var cell = null
@@ -221,8 +227,22 @@ func _release_potassium():
 		cell.actual_potassium += k_bound
 		cell.concentrations_updated.emit()
 
+		# Report pump current to electrochemical field
+		# Na-K-ATPase: 3 Na+ OUT (outward positive) + 2 K+ IN (inward positive)
+		# Net current = -3 (outward) + 2 (inward) = -1 (hyperpolarizing)
+		# Current convention: negative = hyperpolarizing (net outward positive charge)
+		if cell.electrochemical_field:
+			var cycle_time = CYCLE_TIME  # 17ms total cycle
+			var na_efflux_per_second = na_bound / cycle_time  # Na+ ions/second (outward)
+			var k_influx_per_second = k_bound / cycle_time    # K+ ions/second (inward)
+
+			# Outward Na+ creates negative current (hyperpolarizing)
+			cell.electrochemical_field.add_transporter_current("na_k_pump_na", na_efflux_per_second, -1.0)
+			# Inward K+ creates positive current (depolarizing)
+			cell.electrochemical_field.add_transporter_current("na_k_pump_k", k_influx_per_second, +1.0)
+
 		# Final cycle summary
-		var voltage = cell.electrochemical_field.calculate_resting_potential(blood) if cell.electrochemical_field else 0
+		var voltage = cell.electrochemical_field.membrane_potential if cell.electrochemical_field else 0
 		print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 		print("[Na-K-ATPase] CYCLE COMPLETE (~17ms total)")
 		print("  Net transport: %d Na+ OUT, %d K+ IN" % [na_bound, k_bound])
