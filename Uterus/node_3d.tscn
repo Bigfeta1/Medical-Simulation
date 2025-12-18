@@ -355,7 +355,47 @@ text = "RPF / Afferent Dilation: "
 
 [node name="HydrostaticGradientLabel" type="Label" parent="Kidney/Nephron/RenalDynamics/DynamicsDisplay/VBoxContainer"]
 layout_mode = 2
-text = "RPF / Afferent Dilation: "
+text = "Hydrostatic Gradient: "
+
+[node name="OncoticGradientLabel" type="Label" parent="Kidney/Nephron/RenalDynamics/DynamicsDisplay/VBoxContainer"]
+layout_mode = 2
+text = "Oncotic Gradient: "
+
+[node name="NetFiltrationLabel" type="Label" parent="Kidney/Nephron/RenalDynamics/DynamicsDisplay/VBoxContainer"]
+layout_mode = 2
+text = "Nt Filtration: "
+
+[node name="CreatinineClearanceLabel" type="Label" parent="Kidney/Nephron/RenalDynamics/DynamicsDisplay/VBoxContainer"]
+layout_mode = 2
+text = "Creatinine Clearance: "
+
+[node name="GFRLabel" type="Label" parent="Kidney/Nephron/RenalDynamics/DynamicsDisplay/VBoxContainer"]
+layout_mode = 2
+text = "Creatinine Clearance: "
+
+[node name="PlasmaCrLabel" type="Label" parent="Kidney/Nephron/RenalDynamics/DynamicsDisplay/VBoxContainer"]
+layout_mode = 2
+text = "Creatinine Clearance: "
+
+[node name="UrineCrLabel" type="Label" parent="Kidney/Nephron/RenalDynamics/DynamicsDisplay/VBoxContainer"]
+layout_mode = 2
+text = "Creatinine Clearance: "
+
+[node name="SizeLabel" type="Label" parent="Kidney/Nephron/RenalDynamics/DynamicsDisplay/VBoxContainer"]
+layout_mode = 2
+text = "Creatinine Clearance: "
+
+[node name="FFLabel" type="Label" parent="Kidney/Nephron/RenalDynamics/DynamicsDisplay/VBoxContainer"]
+layout_mode = 2
+text = "Creatinine Clearance: "
+
+[node name="EfferentDilationLabel" type="Label" parent="Kidney/Nephron/RenalDynamics/DynamicsDisplay/VBoxContainer"]
+layout_mode = 2
+text = "Creatinine Clearance: "
+
+[node name="PlasmaFluidLabel" type="Label" parent="Kidney/Nephron/RenalDynamics/DynamicsDisplay/VBoxContainer"]
+layout_mode = 2
+text = "Creatinine Clearance: "
 
 [node name="Glomerulus" type="Node3D" parent="Kidney/Nephron"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3278231, -3.7890754, 0)
@@ -393,7 +433,7 @@ libraries = {
 position = Vector2(323.99997, 155.00002)
 scale = Vector2(0.632, 0.292)
 sprite_frames = SubResource("SpriteFrames_dkrmx")
-frame_progress = 0.79693615
+frame_progress = 0.8253226
 
 [node name="PCT" type="Node3D" parent="Kidney/Nephron"]
 
