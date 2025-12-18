@@ -37,7 +37,7 @@ func _update_display():
 	amino_acid_label.text = "Amino Acids: " + str(compartment_node.amino_acids)
 
 	water_label.text = "H20: " + str(compartment_node.water)
-	carbon_dioxide_label.text = "CO2: " + str(compartment_node.water)
+	carbon_dioxide_label.text = "CO2: " + str(compartment_node.co2)
 	carbonic_acid_label.text = "Carbonic Acid: " + str(compartment_node.carbonic_acid)
 	
 	proton_label.text = "H+: " + str(compartment_node.protons)

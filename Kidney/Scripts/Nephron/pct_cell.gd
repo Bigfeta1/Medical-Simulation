@@ -6,6 +6,9 @@ signal concentrations_updated
 @onready var carbonic_anhydrase = $CarbonicAnhydrase
 @onready var electrochemical_field = $ElectrochemicalField
 
+@onready var kidney = get_parent().get_parent().get_parent()
+@onready var solute_display = $SoluteDisplay
+
 
 
 var compartment: PCTCellCompartment
@@ -50,6 +53,8 @@ var volume: float = 2e-12
 @export var debug_scale_factor: float = 1.32e-5
 
 func _ready():
+	kidney.state_changed.connect(_on_kidney_state_changed)
+	
 	# Set volume FIRST before anything else that might trigger calculations
 	if electrochemical_field:
 		electrochemical_field.volume = volume
@@ -59,6 +64,7 @@ func _ready():
 	play()
 	front.play()
 	carbonic_anhydrase.play()
+	
 	_initialize_concentrations()
 
 func _initialize_concentrations():
@@ -204,3 +210,10 @@ func _equilibrate_carbonic_acid(delta):
 	# Emit update signal if significant change
 	if abs(net_dissociation_molecules) > 1.0:
 		concentrations_updated.emit()
+
+func _on_kidney_state_changed(_old_state, new_state):
+	if new_state == kidney.SelectionState.PCT:
+		await get_tree().create_timer(0.4).timeout
+		solute_display.visible = true
+	else:
+		solute_display.visible = false

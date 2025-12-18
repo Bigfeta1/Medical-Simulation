@@ -3,6 +3,8 @@ extends MeshInstance3D
 signal concentrations_updated
 
 @onready var electrochemical_field = $ElectrochemicalField
+@onready var kidney = get_parent().get_parent().get_parent()
+@onready var solute_display = $SoluteDisplay
 
 # Compartment ion/solute counts
 var sodium: int = 0
@@ -38,6 +40,8 @@ var volume: float = 5e-12
 @export var debug_scale_factor: float = 1.32e-5
 
 func _ready():
+	kidney.state_changed.connect(_on_kidney_state_changed)
+	
 	# Set electrochemical field volume
 	if electrochemical_field:
 		electrochemical_field.volume = volume
@@ -103,3 +107,10 @@ func set_concentration(ion_name: String, concentration_mM: float):
 		"carbonic_acid", "h2co3":
 			actual_carbonic_acid = actual_count
 			carbonic_acid = display_count
+
+func _on_kidney_state_changed(_old_state, new_state):
+	if new_state == kidney.SelectionState.PCT:
+		await get_tree().create_timer(0.4).timeout
+		solute_display.visible = true
+	else:
+		solute_display.visible = false

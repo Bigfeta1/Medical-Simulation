@@ -36,9 +36,9 @@
 				}
 			]
 		},
-		"Chloride_Base_Exchanger": {
-			"full_name": "Chloride/Base Exchanger",
-			"description": "Anion exchanger that facilitates chloride reabsorption in exchange for intracellular base (typically bicarbonate or formate).",
+		"SLC26": {
+			"full_name": "SLC26",
+			"description": "Chloride/Base Exchanger. Anion exchanger that facilitates chloride reabsorption in exchange for intracellular base (typically bicarbonate or formate).",
 			"transports": [
 				{
 					"substrate": "Cl-",
