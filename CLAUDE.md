@@ -49,7 +49,7 @@ The codebase is organized by medical organ systems, each in its own directory:
 Example (correct):
 ```gdscript
 func _ready():
-    uterus_controller.state_changed_to_pregnant.connect(_on_pregnant_state)
+	uterus_controller.state_changed_to_pregnant.connect(_on_pregnant_state)
 ```
 
 ## Running the Project
