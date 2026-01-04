@@ -1,22 +1,155 @@
-[gd_scene load_steps=23 format=3 uid="uid://byoqlrob0vm10"]
+[gd_scene load_steps=56 format=3 uid="uid://byoqlrob0vm10"]
 
 [ext_resource type="Script" uid="uid://c5vwawa4eq3fw" path="res://Kidney/Scripts/kidney.gd" id="1_nx5q5"]
 [ext_resource type="Script" uid="uid://c7sxsykogw0je" path="res://Kidney/Scripts/camera_body.gd" id="2_ifj7m"]
 [ext_resource type="PackedScene" uid="uid://dd0lsxoa5uydg" path="res://Kidney/Scenes/nephron.tscn" id="12_na176"]
 [ext_resource type="Texture2D" uid="uid://bjnn4gydmtft3" path="res://General/assets/ui_panel.png" id="13_4lyhl"]
 [ext_resource type="Script" uid="uid://bn6bljlfhytd0" path="res://Kidney/Scripts/Nephron/nephron_info_manager.gd" id="14_0av0m"]
+[ext_resource type="Texture2D" uid="uid://cuolxvayeil35" path="res://Endocrine/Adrenals/Assets/adrenals.png" id="18_rjkdb"]
 [ext_resource type="Script" uid="uid://by58sxxw30hhp" path="res://General/channels/activate_receptor_button.gd" id="19_hb7x5"]
+[ext_resource type="Texture2D" uid="uid://bn60avdfnxgiq" path="res://Heart/Assets/Gross/HeartBase/Heart1.png" id="19_leiou"]
+[ext_resource type="Texture2D" uid="uid://bof8wbb66ghlh" path="res://Heart/Assets/Gross/HeartBase/Heart2.png" id="20_ihh6v"]
+[ext_resource type="Texture2D" uid="uid://bggnet7nmiqj2" path="res://Heart/Assets/Gross/HeartBase/Heart3.png" id="21_88omk"]
+[ext_resource type="Texture2D" uid="uid://mkhptulhm8tg" path="res://Heart/Assets/Gross/HeartBase/Heart4.png" id="22_4n8vb"]
+[ext_resource type="Texture2D" uid="uid://umb8j2lurqwh" path="res://Heart/Assets/Gross/HeartBase/Heart5.png" id="23_4sqa2"]
+[ext_resource type="Texture2D" uid="uid://bmgteuakfgrll" path="res://Heart/Assets/Gross/HeartBase/Heart6.png" id="24_pli6c"]
+[ext_resource type="Texture2D" uid="uid://b0d4285w628m3" path="res://Heart/Assets/Gross/HeartBase/Heart7.png" id="25_83u7c"]
+[ext_resource type="Texture2D" uid="uid://cc0qsq62hu6ee" path="res://Heart/Assets/Gross/HeartBase/Heart8.png" id="26_nbxdx"]
+[ext_resource type="Texture2D" uid="uid://c3cf5655efx24" path="res://Heart/Assets/Gross/HeartBase/Heart9.png" id="27_vj1vl"]
+[ext_resource type="Texture2D" uid="uid://ce0x7yu5vsccm" path="res://Heart/Assets/Gross/HeartBase/Heart10.png" id="28_lhjoe"]
+[ext_resource type="Texture2D" uid="uid://c2tckvrn0iepi" path="res://Heart/Assets/Gross/HeartBase/Heart11.png" id="29_q4u61"]
+[ext_resource type="Texture2D" uid="uid://bspfuxuuqvrrb" path="res://Heart/Assets/Gross/HeartBase/Heart12.png" id="30_aup5j"]
+[ext_resource type="Texture2D" uid="uid://dx53ago52kv7t" path="res://Heart/Assets/Gross/HeartBase/Heart13.png" id="31_m2vkn"]
+[ext_resource type="Texture2D" uid="uid://duntdfcs2ll2a" path="res://Heart/Assets/Gross/HeartBase/Heart14.png" id="32_xvaqg"]
+[ext_resource type="Texture2D" uid="uid://cpy7djjpw1kt6" path="res://Heart/Assets/Gross/HeartBase/Heart15.png" id="33_biekl"]
+[ext_resource type="Texture2D" uid="uid://cm1rxq83b2g0t" path="res://Heart/Assets/Gross/HeartBase/Heart16.png" id="34_r6r3w"]
 [ext_resource type="Script" uid="uid://ccpjwacwxkxec" path="res://Kidney/Scripts/Nephron/nephron_navigator.gd" id="35_p66a6"]
 [ext_resource type="Texture2D" uid="uid://bjmegug65sjmw" path="res://Kidney/Assets/Nephron/Navigator/Nephron.png" id="35_rmq3q"]
+[ext_resource type="Texture2D" uid="uid://ccq20jrvm85vk" path="res://Heart/Assets/Gross/HeartBase/Heart17.png" id="35_vqct2"]
+[ext_resource type="Texture2D" uid="uid://b8f7m62rvfacp" path="res://Heart/Assets/Gross/HeartBase/Heart18.png" id="36_sm30j"]
+[ext_resource type="Texture2D" uid="uid://b8h1q4nctpi8s" path="res://Heart/Assets/Gross/HeartBase/Heart19.png" id="37_gnxit"]
+[ext_resource type="Texture2D" uid="uid://jiuv6bj1doka" path="res://Heart/Assets/Gross/HeartBase/Heart20.png" id="38_11nhw"]
+[ext_resource type="Texture2D" uid="uid://d0c4ip426mnse" path="res://Heart/Assets/Gross/HeartBase/Heart21.png" id="39_jyej6"]
+[ext_resource type="Texture2D" uid="uid://dr5gfo1xw31t0" path="res://Heart/Assets/Gross/HeartBase/Heart22.png" id="40_7hvuv"]
+[ext_resource type="Texture2D" uid="uid://dok5ysmjlycix" path="res://Heart/Assets/Gross/HeartBase/Heart23.png" id="41_kqcdg"]
+[ext_resource type="Texture2D" uid="uid://bsj73gpiwbm0m" path="res://Heart/Assets/Gross/HeartBase/Heart24.png" id="42_mhjp8"]
 [ext_resource type="Texture2D" uid="uid://pc7byulytbt8" path="res://Kidney/Assets/Gross/l_renal_arteries.png" id="43_r47wy"]
+[ext_resource type="Texture2D" uid="uid://66dgrg4cwjut" path="res://Heart/Assets/Gross/HeartBase/Heart25.png" id="43_vr7dc"]
+[ext_resource type="Texture2D" uid="uid://c88lm4injilmg" path="res://Heart/Assets/Gross/HeartBase/Heart26.png" id="44_dhw2l"]
 [ext_resource type="Texture2D" uid="uid://bn0c5y3prjgbu" path="res://Kidney/Assets/Gross/kidney_base.png" id="44_m23ob"]
 [ext_resource type="Texture2D" uid="uid://nd1ui08mpa2t" path="res://Kidney/Assets/Gross/r_renal_vein.png" id="44_pspjp"]
+[ext_resource type="Texture2D" uid="uid://3yv3qtnyuhty" path="res://Heart/Assets/Gross/HeartBase/Heart27.png" id="45_hdbtq"]
 [ext_resource type="Texture2D" uid="uid://dhdl3fam62tfh" path="res://Kidney/Assets/Gross/l_testicular_vein.png" id="45_m23ob"]
 [ext_resource type="Texture2D" uid="uid://syncxutyavy7" path="res://Kidney/Assets/Gross/ureter.png" id="45_va6ea"]
+[ext_resource type="Texture2D" uid="uid://y7inle767quy" path="res://Heart/Assets/Gross/HeartBase/Heart28.png" id="46_lbkyo"]
+[ext_resource type="Texture2D" uid="uid://huw2f82lwjum" path="res://Heart/Assets/Gross/HeartBase/Heart29.png" id="47_i6ilb"]
 [ext_resource type="Texture2D" uid="uid://b1v4gqjwvqqfl" path="res://Kidney/Assets/Gross/r_renal_arteries.png" id="47_r47wy"]
 [ext_resource type="Texture2D" uid="uid://voihee6itduk" path="res://Kidney/Assets/Gross/l_renal_vein.png" id="48_02mgy"]
+[ext_resource type="Texture2D" uid="uid://bl4cfyeu53lp8" path="res://Heart/Assets/Gross/HeartBase/Heart30.png" id="48_yaqp5"]
 [ext_resource type="Texture2D" uid="uid://civ1wmwpohl4a" path="res://Kidney/Assets/Gross/bladder_base.png" id="49_leiou"]
+[ext_resource type="Texture2D" uid="uid://77ilekm041ji" path="res://Heart/Assets/Gross/HeartBase/Heart31.png" id="49_to5if"]
 [ext_resource type="Script" uid="uid://d1emajy4alt20" path="res://Kidney/Scripts/kidney_click_area.gd" id="50_leiou"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_r3m77"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("19_leiou")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_ihh6v")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_88omk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_4n8vb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_4sqa2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_pli6c")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_83u7c")
+}, {
+"duration": 1.0,
+"texture": ExtResource("26_nbxdx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("27_vj1vl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("28_lhjoe")
+}, {
+"duration": 1.0,
+"texture": ExtResource("29_q4u61")
+}, {
+"duration": 1.0,
+"texture": ExtResource("30_aup5j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("31_m2vkn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("32_xvaqg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("33_biekl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("34_r6r3w")
+}, {
+"duration": 1.0,
+"texture": ExtResource("35_vqct2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("36_sm30j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("37_gnxit")
+}, {
+"duration": 1.0,
+"texture": ExtResource("38_11nhw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("39_jyej6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("40_7hvuv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("41_kqcdg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("42_mhjp8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("43_vr7dc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("44_dhw2l")
+}, {
+"duration": 1.0,
+"texture": ExtResource("45_hdbtq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("46_lbkyo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("47_i6ilb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("48_yaqp5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("49_to5if")
+}],
+"loop": true,
+"name": &"default",
+"speed": 30.0
+}]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ihh6v"]
 radius = 25.752
@@ -46,6 +179,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 56.065773, 19.141, -18.092)
 projection = 1
 size = 0.016
 script = ExtResource("2_ifj7m")
+
+[node name="Heart" type="Node" parent="."]
+
+[node name="HeartSprite" type="AnimatedSprite3D" parent="Heart"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.186317, 220.66354, -24.775959)
+pixel_size = 0.1981
+sprite_frames = SubResource("SpriteFrames_r3m77")
+frame_progress = 0.4803601
 
 [node name="Kidney" type="Node" parent="."]
 script = ExtResource("1_nx5q5")
@@ -203,3 +344,10 @@ transform = Transform3D(8.47, 0, 0, 0, 209.61, 0, 0, 0, 8.47, -6.3661995, 14.064
 material_override = SubResource("StandardMaterial3D_m23ob")
 mesh = SubResource("TorusMesh_dr4th")
 skeleton = NodePath("../../../../..")
+
+[node name="Adrenals" type="Node" parent="."]
+
+[node name="LAdrenals" type="Sprite3D" parent="Adrenals"]
+transform = Transform3D(0.9967719, -0.080285914, 0, 0.080285914, 0.9967719, 0, 0, 0, 1, 45.0759, 63.759834, -22.212315)
+pixel_size = 0.0596
+texture = ExtResource("18_rjkdb")
