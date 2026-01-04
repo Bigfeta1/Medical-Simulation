@@ -1,4 +1,4 @@
-[gd_scene load_steps=65 format=3 uid="uid://byoqlrob0vm10"]
+[gd_scene load_steps=71 format=3 uid="uid://byoqlrob0vm10"]
 
 [ext_resource type="Texture2D" uid="uid://cytfkheigffsc" path="res://Kidney/Assets/Nephron/PCT/PCT_base1.png" id="1_8apwo"]
 [ext_resource type="Script" uid="uid://c5vwawa4eq3fw" path="res://Kidney/Scripts/kidney.gd" id="1_nx5q5"]
@@ -38,8 +38,139 @@
 [ext_resource type="Texture2D" uid="uid://bljlw722wvhu6" path="res://Kidney/Assets/Nephron/PCT/channels/apical/SLC26_1.png" id="21_pf2e0"]
 [ext_resource type="Texture2D" uid="uid://c8rke7tp45u4x" path="res://Kidney/Assets/Nephron/PCT/channels/apical/SLC26_2.png" id="22_ndhup"]
 [ext_resource type="Script" uid="uid://bhumfxuvu606a" path="res://Kidney/Scripts/Nephron/channels/slc_26.gd" id="23_ndhup"]
+[ext_resource type="Script" uid="uid://b4kwigp3tq3li" path="res://Kidney/Scripts/lumen_particles.gd" id="25_wi8ea"]
 [ext_resource type="Script" uid="uid://ccpjwacwxkxec" path="res://Kidney/Scripts/Nephron/nephron_navigator.gd" id="35_p66a6"]
 [ext_resource type="Texture2D" uid="uid://bjmegug65sjmw" path="res://Kidney/Assets/Nephron/Navigator/Nephron.png" id="35_rmq3q"]
+[ext_resource type="Texture2D" uid="uid://bn0c5y3prjgbu" path="res://Kidney/Assets/Gross/kidney_base.png" id="44_m23ob"]
+[ext_resource type="Texture2D" uid="uid://nd1ui08mpa2t" path="res://Kidney/Assets/Gross/renal_veins.png" id="44_pspjp"]
+[ext_resource type="Texture2D" uid="uid://cfvs20wxvqcsr" path="res://Kidney/Assets/Gross/renal_arteries.png" id="44_va6ea"]
+[ext_resource type="Texture2D" uid="uid://dhdl3fam62tfh" path="res://Kidney/Assets/Gross/l_testicular_vein.png" id="45_m23ob"]
+[ext_resource type="Texture2D" uid="uid://syncxutyavy7" path="res://Kidney/Assets/Gross/ureter.png" id="45_va6ea"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_507ss"]
+albedo_color = Color(0.5302961, 0.050957, 0.12168456, 1)
+
+[sub_resource type="TorusMesh" id="TorusMesh_dr4th"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_rls6d"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_8apwo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_tadla")
+}],
+"loop": true,
+"name": &"default",
+"speed": 2.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_pf2e0"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_obg2g")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_jgic6")
+}],
+"loop": true,
+"name": &"default",
+"speed": 2.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_6khlg"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_rls6d")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_2hvlm")
+}],
+"loop": true,
+"name": &"default",
+"speed": 2.0
+}]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qg4cs"]
+shading_mode = 0
+albedo_color = Color(0.21568628, 1, 1, 1)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_wt3wf"]
+emission_shape_scale = Vector3(1.885, 3.905, 1)
+emission_shape = 6
+emission_ring_axis = Vector3(0, 0, 1)
+emission_ring_height = 1.0
+emission_ring_radius = 1.0
+emission_ring_inner_radius = 0.0
+emission_ring_cone_angle = 90.0
+gravity = Vector3(0, -1, 0)
+scale_min = 0.02
+scale_max = 0.02
+
+[sub_resource type="SphereMesh" id="SphereMesh_8apwo"]
+radius = 0.001
+height = 0.002
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_v2sg4"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_6khlg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_dr4th")
+}],
+"loop": true,
+"name": &"default",
+"speed": 2.0
+}]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6khlg"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_obg2g"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("16_np0aa")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_nhrjt")
+}],
+"loop": true,
+"name": &"default",
+"speed": 2.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_hoj1m"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("21_pf2e0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_ndhup")
+}],
+"loop": true,
+"name": &"default",
+"speed": 2.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_kiguq"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_v2sg4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_507ss")
+}],
+"loop": true,
+"name": &"default",
+"speed": 2.0
+}]
 
 [sub_resource type="Animation" id="Animation_24cgt"]
 length = 0.001
@@ -177,128 +308,6 @@ animations = [{
 "speed": 2.0
 }]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_507ss"]
-albedo_color = Color(0.5302961, 0.050957, 0.12168456, 1)
-
-[sub_resource type="TorusMesh" id="TorusMesh_dr4th"]
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_rls6d"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("1_8apwo")
-}, {
-"duration": 1.0,
-"texture": ExtResource("2_tadla")
-}],
-"loop": true,
-"name": &"default",
-"speed": 2.0
-}]
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_pf2e0"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("9_obg2g")
-}, {
-"duration": 1.0,
-"texture": ExtResource("10_jgic6")
-}],
-"loop": true,
-"name": &"default",
-"speed": 2.0
-}]
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_6khlg"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("3_rls6d")
-}, {
-"duration": 1.0,
-"texture": ExtResource("4_2hvlm")
-}],
-"loop": true,
-"name": &"default",
-"speed": 2.0
-}]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qg4cs"]
-albedo_color = Color(0.21568628, 1, 1, 1)
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_wt3wf"]
-emission_shape_scale = Vector3(1.885, 3.905, 1)
-emission_shape = 6
-emission_ring_axis = Vector3(0, 0, 1)
-emission_ring_height = 1.0
-emission_ring_radius = 1.0
-emission_ring_inner_radius = 0.0
-emission_ring_cone_angle = 90.0
-gravity = Vector3(0, -1, 0)
-
-[sub_resource type="SphereMesh" id="SphereMesh_8apwo"]
-radius = 0.01
-height = 0.02
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_v2sg4"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("3_6khlg")
-}, {
-"duration": 1.0,
-"texture": ExtResource("4_dr4th")
-}],
-"loop": true,
-"name": &"default",
-"speed": 2.0
-}]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_6khlg"]
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_obg2g"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("16_np0aa")
-}, {
-"duration": 1.0,
-"texture": ExtResource("17_nhrjt")
-}],
-"loop": true,
-"name": &"default",
-"speed": 2.0
-}]
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_hoj1m"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("21_pf2e0")
-}, {
-"duration": 1.0,
-"texture": ExtResource("22_ndhup")
-}],
-"loop": true,
-"name": &"default",
-"speed": 2.0
-}]
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_kiguq"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("5_v2sg4")
-}, {
-"duration": 1.0,
-"texture": ExtResource("6_507ss")
-}],
-"loop": true,
-"name": &"default",
-"speed": 2.0
-}]
-
 [sub_resource type="PrismMesh" id="PrismMesh_rmq3q"]
 size = Vector3(1, 0.15, 1)
 
@@ -314,12 +323,146 @@ light_specular = 0.0
 script = ExtResource("1_nx5q5")
 
 [node name="Camera3D" type="Camera3D" parent="Kidney"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.9967372, 0.48, 5.957)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.035, 19.141, -18.092)
 projection = 1
-size = 9.052
+size = 0.016
 script = ExtResource("2_ifj7m")
 
 [node name="Nephron" type="Node3D" parent="Kidney"]
+transform = Transform3D(0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0, 18.716722, -19.729105)
+
+[node name="PCT" type="Node3D" parent="Kidney/Nephron"]
+transform = Transform3D(0.177, 0, 0, 0, 0.177, 0, 0, 0, 0.177, -3.261, 42.388, 0)
+
+[node name="BloodVessel" type="MeshInstance3D" parent="Kidney/Nephron/PCT"]
+transform = Transform3D(1.813, 0, 0, 0, 21.764997, 0, 0, 0, 0.458, 6.8012543, 0.0048828125, -0.01953125)
+material_override = SubResource("StandardMaterial3D_507ss")
+mesh = SubResource("TorusMesh_dr4th")
+skeleton = NodePath("../../../..")
+script = ExtResource("3_n5f4h")
+
+[node name="ElectrochemicalField" type="Node3D" parent="Kidney/Nephron/PCT/BloodVessel"]
+transform = Transform3D(1, 0, 0, 0, 1.0000001, 0, 0, 0, 1, 1.9787121, 0.6158239, 0)
+script = ExtResource("6_rjkdb")
+
+[node name="SoluteDisplay" parent="Kidney/Nephron/PCT/BloodVessel" instance=ExtResource("12_nhrjt")]
+offset_left = 1779.0
+offset_top = 175.0
+offset_right = 1819.0
+offset_bottom = 215.0
+
+[node name="PCTCell" type="AnimatedSprite3D" parent="Kidney/Nephron/PCT"]
+transform = Transform3D(0.9999999, 0, 0, 0, 1, 0, 0, 0, 0.9999999, -0.06900287, 0, -0.007972389)
+no_depth_test = true
+sprite_frames = SubResource("SpriteFrames_rls6d")
+frame = 1
+frame_progress = 0.59851176
+script = ExtResource("4_x2dpx")
+
+[node name="ElectrochemicalField" type="Node3D" parent="Kidney/Nephron/PCT/PCTCell"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9787128, 0.61582386, 0)
+script = ExtResource("6_rjkdb")
+
+[node name="CarbonicAnhydrase" type="AnimatedSprite3D" parent="Kidney/Nephron/PCT/PCTCell"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.81231695, -2.095, 0.024999999)
+sprite_frames = SubResource("SpriteFrames_pf2e0")
+script = ExtResource("18_carbonic_anhydrase")
+
+[node name="PCTCellFront" type="AnimatedSprite3D" parent="Kidney/Nephron/PCT/PCTCell"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.065)
+sprite_frames = SubResource("SpriteFrames_6khlg")
+frame_progress = 0.8007004
+
+[node name="SoluteDisplay" parent="Kidney/Nephron/PCT/PCTCell" instance=ExtResource("12_nhrjt")]
+offset_left = 1173.0
+offset_top = 617.0
+offset_right = 1213.0
+offset_bottom = 657.0
+
+[node name="PCTLumen" type="Node3D" parent="Kidney/Nephron/PCT"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8601504, 0, 0)
+script = ExtResource("20_lumen")
+
+[node name="ElectrochemicalField" type="Node3D" parent="Kidney/Nephron/PCT/PCTLumen"]
+script = ExtResource("6_rjkdb")
+
+[node name="SoluteDisplay" parent="Kidney/Nephron/PCT/PCTLumen" instance=ExtResource("12_nhrjt")]
+
+[node name="Sodium" parent="Kidney/Nephron/PCT/PCTLumen" instance=ExtResource("14_na176")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1145844, 2.9389777, 6.376831)
+visible = false
+
+[node name="LumenParticles" type="Node" parent="Kidney/Nephron/PCT/PCTLumen"]
+script = ExtResource("25_wi8ea")
+
+[node name="WaterParticles" type="GPUParticles3D" parent="Kidney/Nephron/PCT/PCTLumen/LumenParticles"]
+transform = Transform3D(0.002, 0, 0, 0, 0.002, 0, 0, 0, 0.002, -0.0048411405, 18.717093, -19.729105)
+material_override = SubResource("StandardMaterial3D_qg4cs")
+amount = 1000
+preprocess = 0.5
+process_material = SubResource("ParticleProcessMaterial_wt3wf")
+draw_pass_1 = SubResource("SphereMesh_8apwo")
+
+[node name="Channels" type="Node3D" parent="Kidney/Nephron/PCT"]
+transform = Transform3D(0.9999999, 0, 0, 0, 1, 0, 0, 0, 0.9999999, 0, 0, -0.007972389)
+
+[node name="Apical" type="Node3D" parent="Kidney/Nephron/PCT/Channels"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5147771, 0, 0)
+
+[node name="SGLT2" type="AnimatedSprite3D" parent="Kidney/Nephron/PCT/Channels/Apical"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.07331389, 2.5804367, 0)
+no_depth_test = true
+sprite_frames = SubResource("SpriteFrames_v2sg4")
+frame_progress = 0.8599167
+script = ExtResource("5_kiguq")
+channel_name = "SGLT2"
+epithelial_polarity = 1
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Kidney/Nephron/PCT/Channels/Apical/SGLT2"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Kidney/Nephron/PCT/Channels/Apical/SGLT2/StaticBody3D"]
+shape = SubResource("BoxShape3D_6khlg")
+
+[node name="NHE3" type="AnimatedSprite3D" parent="Kidney/Nephron/PCT/Channels/Apical"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.07331389, 1.685863, 0)
+no_depth_test = true
+sprite_frames = SubResource("SpriteFrames_obg2g")
+script = ExtResource("16_rgulo")
+channel_name = "NHE3"
+epithelial_polarity = 1
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Kidney/Nephron/PCT/Channels/Apical/NHE3"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Kidney/Nephron/PCT/Channels/Apical/NHE3/StaticBody3D"]
+shape = SubResource("BoxShape3D_6khlg")
+
+[node name="SLC26" type="AnimatedSprite3D" parent="Kidney/Nephron/PCT/Channels/Apical"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.07331389, 0.7834022, 0)
+no_depth_test = true
+sprite_frames = SubResource("SpriteFrames_hoj1m")
+script = ExtResource("23_ndhup")
+channel_name = "SLC26"
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Kidney/Nephron/PCT/Channels/Apical/SLC26"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Kidney/Nephron/PCT/Channels/Apical/SLC26/StaticBody3D"]
+shape = SubResource("BoxShape3D_6khlg")
+
+[node name="Basolateral" type="Node3D" parent="Kidney/Nephron/PCT/Channels"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6588893, 1.2371134, 0)
+
+[node name="Na_K_ATPase" type="AnimatedSprite3D" parent="Kidney/Nephron/PCT/Channels/Basolateral"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25851727, -0.7324513, 0.035830263)
+sprite_frames = SubResource("SpriteFrames_kiguq")
+frame_progress = 0.45564502
+script = ExtResource("12_v4lkt")
+channel_name = "Na_K_ATPase"
+epithelial_polarity = 2
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Kidney/Nephron/PCT/Channels/Basolateral/Na_K_ATPase"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Kidney/Nephron/PCT/Channels/Basolateral/Na_K_ATPase/StaticBody3D"]
+shape = SubResource("BoxShape3D_6khlg")
 
 [node name="NephronSelectionManager" type="Node" parent="Kidney/Nephron"]
 script = ExtResource("9_507ss")
@@ -401,7 +544,7 @@ text = "Creatinine Clearance: "
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3278231, -3.7890754, 0)
 
 [node name="Glomerulus" type="AnimatedSprite3D" parent="Kidney/Nephron/Glomerulus"]
-transform = Transform3D(8.258, 0, 0, 0, 8.258, 0, 0, 0, 8.258, -3.4826965, 53.820694, 0)
+transform = Transform3D(1.208, 0, 0, 0, 1.208, 0, 0, 0, 1.208, -3.4826965, 53.820694, 0)
 sprite_frames = SubResource("SpriteFrames_ifj7m")
 frame_progress = 0.31364414
 script = ExtResource("6_5hbc5")
@@ -434,133 +577,6 @@ position = Vector2(323.99997, 155.00002)
 scale = Vector2(0.632, 0.292)
 sprite_frames = SubResource("SpriteFrames_dkrmx")
 frame_progress = 0.64671224
-
-[node name="PCT" type="Node3D" parent="Kidney/Nephron"]
-
-[node name="BloodVessel" type="MeshInstance3D" parent="Kidney/Nephron/PCT"]
-transform = Transform3D(0.458, 0, 0, 0, 21.765, 0, 0, 0, 0.458, 5.3436146, 0.006071329, -0.01971674)
-material_override = SubResource("StandardMaterial3D_507ss")
-mesh = SubResource("TorusMesh_dr4th")
-skeleton = NodePath("../../../..")
-script = ExtResource("3_n5f4h")
-
-[node name="ElectrochemicalField" type="Node3D" parent="Kidney/Nephron/PCT/BloodVessel"]
-transform = Transform3D(1, 0, 0, 0, 1.0000001, 0, 0, 0, 1, 1.9787121, 0.6158239, 0)
-script = ExtResource("6_rjkdb")
-
-[node name="SoluteDisplay" parent="Kidney/Nephron/PCT/BloodVessel" instance=ExtResource("12_nhrjt")]
-offset_left = 1779.0
-offset_top = 175.0
-offset_right = 1819.0
-offset_bottom = 215.0
-
-[node name="PCTCell" type="AnimatedSprite3D" parent="Kidney/Nephron/PCT"]
-transform = Transform3D(0.9999999, 0, 0, 0, 1, 0, 0, 0, 0.9999999, -0.06900287, 0, -0.007972389)
-no_depth_test = true
-sprite_frames = SubResource("SpriteFrames_rls6d")
-frame = 1
-frame_progress = 0.59851176
-script = ExtResource("4_x2dpx")
-
-[node name="ElectrochemicalField" type="Node3D" parent="Kidney/Nephron/PCT/PCTCell"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9787128, 0.61582386, 0)
-script = ExtResource("6_rjkdb")
-
-[node name="CarbonicAnhydrase" type="AnimatedSprite3D" parent="Kidney/Nephron/PCT/PCTCell"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.81231695, -2.095, 0.024999999)
-sprite_frames = SubResource("SpriteFrames_pf2e0")
-script = ExtResource("18_carbonic_anhydrase")
-
-[node name="PCTCellFront" type="AnimatedSprite3D" parent="Kidney/Nephron/PCT/PCTCell"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.065)
-sprite_frames = SubResource("SpriteFrames_6khlg")
-frame_progress = 0.8007004
-
-[node name="SoluteDisplay" parent="Kidney/Nephron/PCT/PCTCell" instance=ExtResource("12_nhrjt")]
-offset_left = 1173.0
-offset_top = 617.0
-offset_right = 1213.0
-offset_bottom = 657.0
-
-[node name="PCTLumen" type="Node3D" parent="Kidney/Nephron/PCT"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8601504, 0, 0)
-script = ExtResource("20_lumen")
-
-[node name="ElectrochemicalField" type="Node3D" parent="Kidney/Nephron/PCT/PCTLumen"]
-script = ExtResource("6_rjkdb")
-
-[node name="SoluteDisplay" parent="Kidney/Nephron/PCT/PCTLumen" instance=ExtResource("12_nhrjt")]
-
-[node name="Sodium" parent="Kidney/Nephron/PCT/PCTLumen" instance=ExtResource("14_na176")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1145844, 2.9389777, 6.376831)
-
-[node name="GPUParticles3D" type="GPUParticles3D" parent="Kidney/Nephron/PCT/PCTLumen"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5604196, 0.1848084, 0)
-material_override = SubResource("StandardMaterial3D_qg4cs")
-amount = 100
-process_material = SubResource("ParticleProcessMaterial_wt3wf")
-draw_pass_1 = SubResource("SphereMesh_8apwo")
-
-[node name="Channels" type="Node3D" parent="Kidney/Nephron/PCT"]
-transform = Transform3D(0.9999999, 0, 0, 0, 1, 0, 0, 0, 0.9999999, 0, 0, -0.007972389)
-
-[node name="Apical" type="Node3D" parent="Kidney/Nephron/PCT/Channels"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5147771, 0, 0)
-
-[node name="SGLT2" type="AnimatedSprite3D" parent="Kidney/Nephron/PCT/Channels/Apical"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.07331389, 2.5804367, 0)
-no_depth_test = true
-sprite_frames = SubResource("SpriteFrames_v2sg4")
-frame_progress = 0.8599167
-script = ExtResource("5_kiguq")
-channel_name = "SGLT2"
-epithelial_polarity = 1
-
-[node name="StaticBody3D" type="StaticBody3D" parent="Kidney/Nephron/PCT/Channels/Apical/SGLT2"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Kidney/Nephron/PCT/Channels/Apical/SGLT2/StaticBody3D"]
-shape = SubResource("BoxShape3D_6khlg")
-
-[node name="NHE3" type="AnimatedSprite3D" parent="Kidney/Nephron/PCT/Channels/Apical"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.07331389, 1.685863, 0)
-no_depth_test = true
-sprite_frames = SubResource("SpriteFrames_obg2g")
-script = ExtResource("16_rgulo")
-channel_name = "NHE3"
-epithelial_polarity = 1
-
-[node name="StaticBody3D" type="StaticBody3D" parent="Kidney/Nephron/PCT/Channels/Apical/NHE3"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Kidney/Nephron/PCT/Channels/Apical/NHE3/StaticBody3D"]
-shape = SubResource("BoxShape3D_6khlg")
-
-[node name="SLC26" type="AnimatedSprite3D" parent="Kidney/Nephron/PCT/Channels/Apical"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.07331389, 0.7834022, 0)
-no_depth_test = true
-sprite_frames = SubResource("SpriteFrames_hoj1m")
-script = ExtResource("23_ndhup")
-channel_name = "SLC26"
-
-[node name="StaticBody3D" type="StaticBody3D" parent="Kidney/Nephron/PCT/Channels/Apical/SLC26"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Kidney/Nephron/PCT/Channels/Apical/SLC26/StaticBody3D"]
-shape = SubResource("BoxShape3D_6khlg")
-
-[node name="Basolateral" type="Node3D" parent="Kidney/Nephron/PCT/Channels"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6588893, 1.2371134, 0)
-
-[node name="Na_K_ATPase" type="AnimatedSprite3D" parent="Kidney/Nephron/PCT/Channels/Basolateral"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25851727, -0.7324513, 0.035830263)
-sprite_frames = SubResource("SpriteFrames_kiguq")
-frame_progress = 0.45564502
-script = ExtResource("12_v4lkt")
-channel_name = "Na_K_ATPase"
-epithelial_polarity = 2
-
-[node name="StaticBody3D" type="StaticBody3D" parent="Kidney/Nephron/PCT/Channels/Basolateral/Na_K_ATPase"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Kidney/Nephron/PCT/Channels/Basolateral/Na_K_ATPase/StaticBody3D"]
-shape = SubResource("BoxShape3D_6khlg")
 
 [node name="Control" type="Control" parent="Kidney"]
 layout_mode = 3
@@ -637,3 +653,31 @@ position = Vector2(97, 92)
 rotation = 1.5707964
 scale = Vector2(18, 114.49999)
 mesh = SubResource("PrismMesh_rmq3q")
+
+[node name="Node3D" type="Node3D" parent="Kidney"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 11.840464, -21.78373)
+
+[node name="KidneyBase" type="Sprite3D" parent="Kidney/Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7920856, 0.2659588)
+pixel_size = 0.1027
+texture = ExtResource("44_m23ob")
+
+[node name="RenalArteries" type="Sprite3D" parent="Kidney/Node3D"]
+transform = Transform3D(0.996041, 0.09422795, 0, -0.088894285, 1.0558034, 0, 0, 0, 1, 0.5810642, 1.5420628, 2.3796043)
+pixel_size = 0.093
+texture = ExtResource("44_va6ea")
+
+[node name="RenalVeins" type="Sprite3D" parent="Kidney/Node3D"]
+transform = Transform3D(0.996041, 0.09422795, 0, -0.088894285, 1.0558034, 0, 0, 0, 1, 1.4234409, 1.9725742, 1.4966164)
+pixel_size = 0.093
+texture = ExtResource("44_pspjp")
+
+[node name="LTesticularVein" type="Sprite3D" parent="Kidney/Node3D/RenalVeins"]
+transform = Transform3D(1, -2.9802322e-08, 0, 0, 1.665, 0, 0, 0, 1, -33.41641, -31.103008, -0.3869667)
+pixel_size = 0.0483
+texture = ExtResource("45_m23ob")
+
+[node name="Ureter" type="Sprite3D" parent="Kidney/Node3D"]
+transform = Transform3D(0.996041, 0.088894285, 0, -0.088894285, 0.996041, 0, 0, 0, 1, -22.826132, -27.66617, 0.24139023)
+pixel_size = 0.093
+texture = ExtResource("45_va6ea")

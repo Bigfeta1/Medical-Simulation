@@ -3,6 +3,7 @@ extends Node
 signal state_changed(old_state, new_state)
 
 enum SelectionState{
+	GROSS,
 	GLOMERULUS,
 	PCT
 }
