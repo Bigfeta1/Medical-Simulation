@@ -3,12 +3,12 @@ extends Node
 signal state_changed(old_state, new_state)
 
 enum SelectionState{
-	GROSS,
+	STANDBY,
 	GLOMERULUS,
 	PCT
 }
 
-var current_display_state: SelectionState = SelectionState.PCT
+var current_display_state: SelectionState = SelectionState.STANDBY
 
 func set_display_state(state: SelectionState):
 	var old_state = current_display_state

@@ -1,8 +1,8 @@
-[gd_scene load_steps=71 format=3 uid="uid://byoqlrob0vm10"]
+[gd_scene load_steps=77 format=3 uid="uid://byoqlrob0vm10"]
 
 [ext_resource type="Texture2D" uid="uid://cytfkheigffsc" path="res://Kidney/Assets/Nephron/PCT/PCT_base1.png" id="1_8apwo"]
 [ext_resource type="Script" uid="uid://c5vwawa4eq3fw" path="res://Kidney/Scripts/kidney.gd" id="1_nx5q5"]
-[ext_resource type="Script" uid="uid://c7sxsykogw0je" path="res://Kidney/Scripts/camera_kidney.gd" id="2_ifj7m"]
+[ext_resource type="Script" uid="uid://c7sxsykogw0je" path="res://Kidney/Scripts/camera_body.gd" id="2_ifj7m"]
 [ext_resource type="Texture2D" uid="uid://bndctuxyjpgs7" path="res://Kidney/Assets/Nephron/PCT/PCT_base2.png" id="2_tadla"]
 [ext_resource type="Texture2D" uid="uid://c1181wirxj0dy" path="res://Kidney/Assets/Nephron/Glomerulus/glomerulus1.png" id="3_2blnf"]
 [ext_resource type="Texture2D" uid="uid://bslg6ysxt3g3l" path="res://Kidney/Assets/Nephron/PCT/channels/apical/SGLT2_1.png" id="3_6khlg"]
@@ -41,11 +41,19 @@
 [ext_resource type="Script" uid="uid://b4kwigp3tq3li" path="res://Kidney/Scripts/lumen_particles.gd" id="25_wi8ea"]
 [ext_resource type="Script" uid="uid://ccpjwacwxkxec" path="res://Kidney/Scripts/Nephron/nephron_navigator.gd" id="35_p66a6"]
 [ext_resource type="Texture2D" uid="uid://bjmegug65sjmw" path="res://Kidney/Assets/Nephron/Navigator/Nephron.png" id="35_rmq3q"]
+[ext_resource type="Texture2D" uid="uid://pc7byulytbt8" path="res://Kidney/Assets/Gross/l_renal_arteries.png" id="43_r47wy"]
 [ext_resource type="Texture2D" uid="uid://bn0c5y3prjgbu" path="res://Kidney/Assets/Gross/kidney_base.png" id="44_m23ob"]
-[ext_resource type="Texture2D" uid="uid://nd1ui08mpa2t" path="res://Kidney/Assets/Gross/renal_veins.png" id="44_pspjp"]
-[ext_resource type="Texture2D" uid="uid://cfvs20wxvqcsr" path="res://Kidney/Assets/Gross/renal_arteries.png" id="44_va6ea"]
+[ext_resource type="Texture2D" uid="uid://nd1ui08mpa2t" path="res://Kidney/Assets/Gross/r_renal_vein.png" id="44_pspjp"]
 [ext_resource type="Texture2D" uid="uid://dhdl3fam62tfh" path="res://Kidney/Assets/Gross/l_testicular_vein.png" id="45_m23ob"]
 [ext_resource type="Texture2D" uid="uid://syncxutyavy7" path="res://Kidney/Assets/Gross/ureter.png" id="45_va6ea"]
+[ext_resource type="Texture2D" uid="uid://b1v4gqjwvqqfl" path="res://Kidney/Assets/Gross/r_renal_arteries.png" id="47_r47wy"]
+[ext_resource type="Texture2D" uid="uid://voihee6itduk" path="res://Kidney/Assets/Gross/l_renal_vein.png" id="48_02mgy"]
+[ext_resource type="Texture2D" uid="uid://civ1wmwpohl4a" path="res://Kidney/Assets/Gross/bladder_base.png" id="49_leiou"]
+[ext_resource type="Script" uid="uid://d1emajy4alt20" path="res://Kidney/Scripts/kidney_click_area.gd" id="50_leiou"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ihh6v"]
+radius = 25.752
+height = 91.2858
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_507ss"]
 albedo_color = Color(0.5302961, 0.050957, 0.12168456, 1)
@@ -311,6 +319,9 @@ animations = [{
 [sub_resource type="PrismMesh" id="PrismMesh_rmq3q"]
 size = Vector3(1, 0.15, 1)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m23ob"]
+albedo_color = Color(0.19008347, 0.25207916, 0.53049624, 1)
+
 [node name="Main" type="Node3D"]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
@@ -319,17 +330,78 @@ light_energy = 3.586
 light_indirect_energy = 6.333
 light_specular = 0.0
 
-[node name="Kidney" type="Node" parent="."]
-script = ExtResource("1_nx5q5")
-
-[node name="Camera3D" type="Camera3D" parent="Kidney"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.035, 19.141, -18.092)
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 56.065773, 19.141, -18.092)
 projection = 1
 size = 0.016
 script = ExtResource("2_ifj7m")
 
+[node name="Kidney" type="Node" parent="."]
+script = ExtResource("1_nx5q5")
+
+[node name="KidneyGross" type="Node3D" parent="Kidney"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 55.578, 11.84, -21.784)
+
+[node name="LKidneyBase" type="Sprite3D" parent="Kidney/KidneyGross"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7920856, -1.233202)
+pixel_size = 0.1027
+texture = ExtResource("44_m23ob")
+
+[node name="RenalArteries" type="Sprite3D" parent="Kidney/KidneyGross/LKidneyBase"]
+transform = Transform3D(0.996041, 0.09422795, 0, -0.088894285, 1.0558034, 0, 0, 0, 1, 0.58106613, -0.2500229, 1.5264759)
+pixel_size = 0.093
+texture = ExtResource("43_r47wy")
+
+[node name="LTesticularVein" type="Sprite3D" parent="Kidney/KidneyGross/LKidneyBase"]
+transform = Transform3D(0.996041, 0.1568894, 0, -0.088894285, 1.7579126, 0, 0, 0, 1, -44.38626, -24.739273, 2.2856197)
+pixel_size = 0.0483
+texture = ExtResource("45_m23ob")
+
+[node name="RenalVeins" type="Sprite3D" parent="Kidney/KidneyGross/LKidneyBase"]
+transform = Transform3D(1.167213, 0.14424613, 0, -0.13505115, 1.2466828, 0, 0, 0, 1.14, -20.12283, 1.1320915, 2.9947376)
+pixel_size = 0.078
+texture = ExtResource("48_02mgy")
+
+[node name="Ureter" type="Sprite3D" parent="Kidney/KidneyGross/LKidneyBase"]
+transform = Transform3D(0.99604106, 0.23556991, 0, -0.0888943, 2.639509, 0, 0, 0, 1, -25.704327, -73.797, -6.7299995)
+pixel_size = 0.093
+texture = ExtResource("45_va6ea")
+
+[node name="KidneyClickArea" type="StaticBody3D" parent="Kidney/KidneyGross/LKidneyBase"]
+transform = Transform3D(1, 0, 0, 0, -1, 1.509958e-07, 0, -1.509958e-07, -1, -3.6398468, -3.7584038, 2.7975597)
+script = ExtResource("50_leiou")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Kidney/KidneyGross/LKidneyBase/KidneyClickArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.275, -3.5095901, -0.6493006, 5.352474)
+shape = SubResource("CapsuleShape3D_ihh6v")
+
+[node name="RKidneyBase" type="Sprite3D" parent="Kidney/KidneyGross"]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, 1, -111.14722, 16.67896, -7.397381)
+pixel_size = 0.1027
+texture = ExtResource("44_m23ob")
+
+[node name="RenalArteries" type="Sprite3D" parent="Kidney/KidneyGross/RKidneyBase"]
+transform = Transform3D(1.1454473, 0.10445079, 0, -0.10222843, 1.1703482, 0, 0, 0, 1, -23.707676, 3.9412136, 1.496582)
+pixel_size = 0.093
+texture = ExtResource("47_r47wy")
+
+[node name="RenalVeins" type="Sprite3D" parent="Kidney/KidneyGross/RKidneyBase"]
+transform = Transform3D(0.996041, 0.09422795, 0, -0.088894285, 1.0558034, 0, 0, 0, 1, 0.44275665, 0.18048859, 2.3272915)
+pixel_size = 0.093
+texture = ExtResource("44_pspjp")
+
+[node name="Ureter" type="Sprite3D" parent="Kidney/KidneyGross/RKidneyBase"]
+transform = Transform3D(0.99604106, 0.25690454, 0, -0.0888943, 2.8785589, 0, 0, 0, 1, -26.18665, -82.87514, -0.024568558)
+pixel_size = 0.093
+texture = ExtResource("45_va6ea")
+
+[node name="Bladder" type="Sprite3D" parent="Kidney/KidneyGross"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -55.578, -196.90465, -5.211918)
+pixel_size = 0.0585
+texture = ExtResource("49_leiou")
+
 [node name="Nephron" type="Node3D" parent="Kidney"]
-transform = Transform3D(0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0, 18.716722, -19.729105)
+transform = Transform3D(0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 56.096203, 18.716722, -19.729105)
 
 [node name="PCT" type="Node3D" parent="Kidney/Nephron"]
 transform = Transform3D(0.177, 0, 0, 0, 0.177, 0, 0, 0, 0.177, -3.261, 42.388, 0)
@@ -654,30 +726,16 @@ rotation = 1.5707964
 scale = Vector2(18, 114.49999)
 mesh = SubResource("PrismMesh_rmq3q")
 
-[node name="Node3D" type="Node3D" parent="Kidney"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 11.840464, -21.78373)
+[node name="Vasculature" type="Node" parent="."]
 
-[node name="KidneyBase" type="Sprite3D" parent="Kidney/Node3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7920856, 0.2659588)
-pixel_size = 0.1027
-texture = ExtResource("44_m23ob")
+[node name="Aorta" type="MeshInstance3D" parent="Vasculature"]
+transform = Transform3D(8.47, 0, 0, 0, 209.61, 0, 0, 0, 8.47, 6.8012543, 14.0646515, -29.533682)
+material_override = SubResource("StandardMaterial3D_507ss")
+mesh = SubResource("TorusMesh_dr4th")
+skeleton = NodePath("../../../../..")
 
-[node name="RenalArteries" type="Sprite3D" parent="Kidney/Node3D"]
-transform = Transform3D(0.996041, 0.09422795, 0, -0.088894285, 1.0558034, 0, 0, 0, 1, 0.5810642, 1.5420628, 2.3796043)
-pixel_size = 0.093
-texture = ExtResource("44_va6ea")
-
-[node name="RenalVeins" type="Sprite3D" parent="Kidney/Node3D"]
-transform = Transform3D(0.996041, 0.09422795, 0, -0.088894285, 1.0558034, 0, 0, 0, 1, 1.4234409, 1.9725742, 1.4966164)
-pixel_size = 0.093
-texture = ExtResource("44_pspjp")
-
-[node name="LTesticularVein" type="Sprite3D" parent="Kidney/Node3D/RenalVeins"]
-transform = Transform3D(1, -2.9802322e-08, 0, 0, 1.665, 0, 0, 0, 1, -33.41641, -31.103008, -0.3869667)
-pixel_size = 0.0483
-texture = ExtResource("45_m23ob")
-
-[node name="Ureter" type="Sprite3D" parent="Kidney/Node3D"]
-transform = Transform3D(0.996041, 0.088894285, 0, -0.088894285, 0.996041, 0, 0, 0, 1, -22.826132, -27.66617, 0.24139023)
-pixel_size = 0.093
-texture = ExtResource("45_va6ea")
+[node name="InferiorVenaCava" type="MeshInstance3D" parent="Vasculature"]
+transform = Transform3D(8.47, 0, 0, 0, 209.61, 0, 0, 0, 8.47, -6.3661995, 14.0646515, -29.533682)
+material_override = SubResource("StandardMaterial3D_m23ob")
+mesh = SubResource("TorusMesh_dr4th")
+skeleton = NodePath("../../../../..")

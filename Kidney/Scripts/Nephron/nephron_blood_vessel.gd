@@ -41,7 +41,7 @@ var volume: float = 5e-12
 
 func _ready():
 	kidney.state_changed.connect(_on_kidney_state_changed)
-	
+
 	# Set electrochemical field volume
 	if electrochemical_field:
 		electrochemical_field.volume = volume
@@ -49,6 +49,10 @@ func _ready():
 	CompartmentRegistry.register_scoped("kidney.pct", "blood", self)
 
 	_initialize_concentrations()
+
+	# Set initial visibility based on kidney state
+	if kidney.current_display_state != kidney.SelectionState.PCT:
+		solute_display.visible = false
 
 func _initialize_concentrations():
 	# Physiologically accurate blood plasma concentrations (extracellular fluid)

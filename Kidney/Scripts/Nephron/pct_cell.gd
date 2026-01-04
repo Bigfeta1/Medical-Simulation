@@ -54,7 +54,7 @@ var volume: float = 2e-12
 
 func _ready():
 	kidney.state_changed.connect(_on_kidney_state_changed)
-	
+
 	# Set volume FIRST before anything else that might trigger calculations
 	if electrochemical_field:
 		electrochemical_field.volume = volume
@@ -64,8 +64,12 @@ func _ready():
 	play()
 	front.play()
 	carbonic_anhydrase.play()
-	
+
 	_initialize_concentrations()
+
+	# Set initial visibility based on kidney state
+	if kidney.current_display_state != kidney.SelectionState.PCT:
+		solute_display.visible = false
 
 func _initialize_concentrations():
 	# Pre-loaded steady-state concentrations (as if pump has been running)
