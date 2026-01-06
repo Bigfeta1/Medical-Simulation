@@ -1,4 +1,4 @@
-[gd_scene load_steps=70 format=3 uid="uid://byoqlrob0vm10"]
+[gd_scene load_steps=75 format=3 uid="uid://byoqlrob0vm10"]
 
 [ext_resource type="Script" uid="uid://c5vwawa4eq3fw" path="res://Kidney/Scripts/kidney.gd" id="1_nx5q5"]
 [ext_resource type="Script" uid="uid://c7sxsykogw0je" path="res://Kidney/Scripts/camera_body.gd" id="2_ifj7m"]
@@ -8,8 +8,13 @@
 [ext_resource type="Script" uid="uid://cc6yuo3njmdwc" path="res://Lungs/Scripts/lung_volumes_controller.gd" id="3_88omk"]
 [ext_resource type="Script" uid="uid://yddm3u7bsbv" path="res://heart/Scripts/Utilities/heart_animations.gd" id="5_4sqa2"]
 [ext_resource type="Script" uid="uid://cvlajoi4qdcod" path="res://Lungs/Scripts/pressure_curves_display.gd" id="6_83u7c"]
+[ext_resource type="Script" uid="uid://cjln4aoplnw5f" path="res://Lungs/Scripts/airway_CO2_controller.gd" id="6_co2"]
 [ext_resource type="Script" uid="uid://cq2kiaab1b30t" path="res://Lungs/Scripts/compliance_controller.gd" id="6_comp_ctrl"]
 [ext_resource type="Script" uid="uid://vey0el4seeca" path="res://Lungs/Scripts/compliance_display.gd" id="6_comp_disp"]
+[ext_resource type="Script" uid="uid://cn84icwe1336h" path="res://Lungs/Scripts/airway_O2_controller.gd" id="6_o2"]
+[ext_resource type="Script" uid="uid://cvu76bhs3l82q" path="res://Lungs/Scripts/pulmonary_perfusion_controller.gd" id="6_perf"]
+[ext_resource type="Script" uid="uid://cqe622ro13ft2" path="res://Lungs/Scripts/pulmonary_vasc_CO2_controller.gd" id="6_vq"]
+[ext_resource type="Script" uid="uid://bo6uqiyg1gp1k" path="res://Lungs/Scripts/vq_gas_exchange_display.gd" id="6_vq_disp"]
 [ext_resource type="Texture2D" uid="uid://bfanntphf65bd" path="res://Lungs/Assets/r_lung.png" id="7_nbxdx"]
 [ext_resource type="Texture2D" uid="uid://d345v1fdmstr8" path="res://Lungs/Assets/l_lung.png" id="8_lhjoe"]
 [ext_resource type="Texture2D" uid="uid://o1ljakhhutn5" path="res://Lungs/Assets/l_lung_front.png" id="9_q4u61"]
@@ -277,6 +282,27 @@ offset_top = 49.0
 offset_right = 1759.0
 offset_bottom = 438.0
 script = ExtResource("6_comp_disp")
+
+[node name="PulmonaryPerfusionController" type="Node" parent="Lungs"]
+script = ExtResource("6_perf")
+
+[node name="VQDisplay" type="Control" parent="Lungs/PulmonaryPerfusionController"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 1358.0
+offset_top = 460.0
+offset_right = 1858.0
+offset_bottom = 840.0
+script = ExtResource("6_vq_disp")
+
+[node name="AirwayO2Controller" type="Node" parent="Lungs"]
+script = ExtResource("6_o2")
+
+[node name="AirwayCO2Controller" type="Node" parent="Lungs"]
+script = ExtResource("6_co2")
+
+[node name="PulmonaryVascCO2Controller" type="Node" parent="Lungs"]
+script = ExtResource("6_vq")
 
 [node name="RLung" type="Node3D" parent="Lungs"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -53.54373, 189.9455, 0.194)
