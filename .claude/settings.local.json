@@ -7,7 +7,16 @@
       "Bash(tac:*)",
       "Bash(find:*)",
       "WebSearch",
-      "Read(//mnt/f/Dropbox (Personal)/Dropbox (Personal)/Vitalion/Notes/Obsidian/VitalSignsRevised2/objects/Renal_Dynamics/**)"
+      "Read(//mnt/f/Dropbox (Personal)/Dropbox (Personal)/Vitalion/Notes/Obsidian/VitalSignsRevised2/objects/Renal_Dynamics/**)",
+      "Read(//mnt/f/Dropbox (Personal)/Dropbox (Personal)/Vitalion/Notes/Obsidian/VitalSignsRevised2/**)",
+      "Read(//mnt/f/Dropbox (Personal)/Dropbox (Personal)/Vitalion/Notes/Obsidian/VitalSignsRevised2/objects/**)",
+      "Read(//mnt/f/Dropbox (Personal)/Dropbox (Personal)/Vitalion/Notes/Obsidian/VitalSignsRevised2/objects/_1_Lung_Controller/**)",
+      "Read(//mnt/f/Dropbox (Personal)/Dropbox (Personal)/Vitalion/Notes/Obsidian/VitalSignsRevised2/objects/_2_Respiration/**)",
+      "Read(//mnt/f/Dropbox (Personal)/Dropbox (Personal)/Vitalion/Notes/Obsidian/VitalSignsRevised2/objects/_3_Compliance/**)",
+      "Read(//mnt/f/Dropbox (Personal)/Dropbox (Personal)/Vitalion/Notes/Obsidian/VitalSignsRevised2/objects/_compliance/**)",
+      "Read(//mnt/f/Dropbox (Personal)/Dropbox (Personal)/Vitalion/Notes/Obsidian/VitalSignsRevised2/objects/_HgB/**)",
+      "Read(//mnt/f/Dropbox (Personal)/Dropbox (Personal)/Vitalion/Notes/Obsidian/VitalSignsRevised2/objects/_mf_and_neu/**)",
+      "Read(//mnt/f/Dropbox (Personal)/Dropbox (Personal)/Vitalion/Notes/Obsidian/VitalSignsRevised2/objects/_Cardiovascular_Controller/**)"
     ],
     "deny": [],
     "ask": []

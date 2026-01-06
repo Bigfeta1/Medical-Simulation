@@ -32,7 +32,7 @@ func _load_pct_data():
 		var parse_result = json.parse(json_string)
 		if parse_result == OK:
 			channel_data = json.data
-			print("Loaded PCT channel data")
+			# print("Loaded PCT channel data")
 		else:
 			push_error("Failed to parse pct_channels.json")
 	else:

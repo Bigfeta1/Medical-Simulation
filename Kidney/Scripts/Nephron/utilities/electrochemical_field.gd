@@ -72,8 +72,8 @@ func _process(delta):
 	membrane_potential = clamp(membrane_potential, -200.0, 100.0)
 
 	# Periodic voltage summary (every 3 seconds) - only for cell compartment
-	if Engine.get_process_frames() % 180 == 0 and parent_compartment and parent_compartment.name == "PCTCell":
-		print("[Cell Voltage] V_m = %.3f mV | GHK = %.3f mV | Drift = %.3f mV" % [membrane_potential, ghk_potential, membrane_potential - ghk_potential])
+	# if Engine.get_process_frames() % 180 == 0 and parent_compartment and parent_compartment.name == "PCTCell":
+	# 	print("[Cell Voltage] V_m = %.3f mV | GHK = %.3f mV | Drift = %.3f mV" % [membrane_potential, ghk_potential, membrane_potential - ghk_potential])
 
 	# Reset current accumulator each frame
 	total_current = 0.0

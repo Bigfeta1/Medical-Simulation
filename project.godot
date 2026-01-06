@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 genome="*res://scripts/autoload/genome.gd"
 scene_loader="*res://scripts/autoload/scene_loader.gd"
 CompartmentRegistry="*res://General/compartment_registry.gd"
+vitals="*res://vitals.gd"
 
 [display]
 
