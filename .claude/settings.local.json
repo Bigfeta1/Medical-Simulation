@@ -16,7 +16,9 @@
       "Read(//mnt/f/Dropbox (Personal)/Dropbox (Personal)/Vitalion/Notes/Obsidian/VitalSignsRevised2/objects/_compliance/**)",
       "Read(//mnt/f/Dropbox (Personal)/Dropbox (Personal)/Vitalion/Notes/Obsidian/VitalSignsRevised2/objects/_HgB/**)",
       "Read(//mnt/f/Dropbox (Personal)/Dropbox (Personal)/Vitalion/Notes/Obsidian/VitalSignsRevised2/objects/_mf_and_neu/**)",
-      "Read(//mnt/f/Dropbox (Personal)/Dropbox (Personal)/Vitalion/Notes/Obsidian/VitalSignsRevised2/objects/_Cardiovascular_Controller/**)"
+      "Read(//mnt/f/Dropbox (Personal)/Dropbox (Personal)/Vitalion/Notes/Obsidian/VitalSignsRevised2/objects/_Cardiovascular_Controller/**)",
+      "Read(//mnt/g/**)",
+      "Read(//mnt/f/Dropbox (Personal)/Dropbox (Personal)/Vitalion/Notes/Obsidian/**)"
     ],
     "deny": [],
     "ask": []
