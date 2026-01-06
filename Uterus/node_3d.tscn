@@ -1,4 +1,4 @@
-[gd_scene load_steps=63 format=3 uid="uid://byoqlrob0vm10"]
+[gd_scene load_steps=67 format=3 uid="uid://byoqlrob0vm10"]
 
 [ext_resource type="Script" uid="uid://c5vwawa4eq3fw" path="res://Kidney/Scripts/kidney.gd" id="1_nx5q5"]
 [ext_resource type="Script" uid="uid://c7sxsykogw0je" path="res://Kidney/Scripts/camera_body.gd" id="2_ifj7m"]
@@ -8,6 +8,9 @@
 [ext_resource type="Script" uid="uid://cc6yuo3njmdwc" path="res://Lungs/Scripts/lung_volumes_controller.gd" id="3_88omk"]
 [ext_resource type="Script" uid="uid://yddm3u7bsbv" path="res://heart/Scripts/Utilities/heart_animations.gd" id="5_4sqa2"]
 [ext_resource type="Script" uid="uid://cvlajoi4qdcod" path="res://Lungs/Scripts/pressure_curves_display.gd" id="6_83u7c"]
+[ext_resource type="Texture2D" uid="uid://bfanntphf65bd" path="res://Lungs/Assets/r_lung.png" id="7_nbxdx"]
+[ext_resource type="Texture2D" uid="uid://d345v1fdmstr8" path="res://Lungs/Assets/l_lung.png" id="8_lhjoe"]
+[ext_resource type="Texture2D" uid="uid://o1ljakhhutn5" path="res://Lungs/Assets/l_lung_front.png" id="9_q4u61"]
 [ext_resource type="PackedScene" uid="uid://dd0lsxoa5uydg" path="res://Kidney/Scenes/nephron.tscn" id="12_na176"]
 [ext_resource type="Texture2D" uid="uid://bjnn4gydmtft3" path="res://General/assets/ui_panel.png" id="13_4lyhl"]
 [ext_resource type="Script" uid="uid://bn6bljlfhytd0" path="res://Kidney/Scripts/Nephron/nephron_info_manager.gd" id="14_0av0m"]
@@ -55,6 +58,7 @@
 [ext_resource type="Texture2D" uid="uid://civ1wmwpohl4a" path="res://Kidney/Assets/Gross/bladder_base.png" id="49_leiou"]
 [ext_resource type="Texture2D" uid="uid://77ilekm041ji" path="res://heart/Assets/Gross/HeartBase/Heart31.png" id="49_to5if"]
 [ext_resource type="Script" uid="uid://d1emajy4alt20" path="res://Kidney/Scripts/kidney_click_area.gd" id="50_leiou"]
+[ext_resource type="Script" uid="uid://bauoant22vq2v" path="res://Lungs/Scripts/lung_sprite_breathing.gd" id="51_breath"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_pli6c"]
 font_size = 31
@@ -239,6 +243,32 @@ offset_top = 448.0
 offset_right = 286.0
 offset_bottom = 1259.0
 script = ExtResource("6_83u7c")
+
+[node name="RLung" type="Node3D" parent="Lungs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -53.05417, 259.40356, 0)
+
+[node name="Sprite" type="Sprite3D" parent="Lungs/RLung"]
+transform = Transform3D(0.69813895, 0.1391731, 0, -0.09811704, 0.99026805, 0, 0, 0, 1, 25.051292, -13.200897, -21.42184)
+pixel_size = 0.1699
+texture = ExtResource("7_nbxdx")
+script = ExtResource("51_breath")
+
+[node name="LLung" type="Node3D" parent="Lungs"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 52.281204, 259.40356, 0)
+
+[node name="Sprite" type="Sprite3D" parent="Lungs/LLung"]
+transform = Transform3D(0.79617554, -0.14988951, -1.6262248e-07, 0.11189525, 1.0665185, 2.6386042e-15, 1.2021916e-07, -2.2632689e-08, 1.077, -8.310959, -15.683929, -27.106167)
+modulate = Color(0.9810118, 0.87011725, 0.86180544, 1)
+pixel_size = 0.1699
+texture = ExtResource("8_lhjoe")
+script = ExtResource("51_breath")
+
+[node name="Sprite2" type="Sprite3D" parent="Lungs/LLung"]
+transform = Transform3D(0.79617554, -0.14988951, -1.6262248e-07, 0.11189525, 1.0665185, 2.6386042e-15, 1.2021916e-07, -2.2632689e-08, 1.077, -8.311001, -15.684036, -19.127)
+modulate = Color(0.9810118, 0.87011725, 0.86180544, 1)
+pixel_size = 0.1699
+texture = ExtResource("9_q4u61")
+script = ExtResource("51_breath")
 
 [node name="Heart" type="Node" parent="."]
 
