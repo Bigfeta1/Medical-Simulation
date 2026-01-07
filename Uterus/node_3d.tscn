@@ -1,19 +1,14 @@
-[gd_scene load_steps=78 format=3 uid="uid://byoqlrob0vm10"]
+[gd_scene load_steps=73 format=3 uid="uid://byoqlrob0vm10"]
 
 [ext_resource type="Script" uid="uid://c5vwawa4eq3fw" path="res://Kidney/Scripts/kidney.gd" id="1_nx5q5"]
 [ext_resource type="Script" uid="uid://c7sxsykogw0je" path="res://Kidney/Scripts/camera_body.gd" id="2_ifj7m"]
-[ext_resource type="Script" uid="uid://l4h8uogerwjj" path="res://Lungs/Scripts/respiration_controller.gd" id="2_ihh6v"]
 [ext_resource type="Script" uid="uid://c5v0r8fbwmbn5" path="res://UI/TopBar/Scripts/rr_display.gd" id="2_pli6c"]
 [ext_resource type="Script" uid="uid://ev3xlowpwwrh" path="res://Lungs/Scripts/lung_volumes_display.gd" id="3_4n8vb"]
-[ext_resource type="Script" uid="uid://cc6yuo3njmdwc" path="res://Lungs/Scripts/lung_volumes_controller.gd" id="3_88omk"]
+[ext_resource type="Script" uid="uid://jsgaoxmabyoy" path="res://Uterus/medulla_oblongata.gd" id="3_vqct2"]
+[ext_resource type="Script" uid="uid://bgx3e8b8aicvq" path="res://Lungs/Scripts/base_lung.gd" id="4_base_lung"]
 [ext_resource type="Script" uid="uid://yddm3u7bsbv" path="res://heart/Scripts/Utilities/heart_animations.gd" id="5_4sqa2"]
 [ext_resource type="Script" uid="uid://cvlajoi4qdcod" path="res://Lungs/Scripts/pressure_curves_display.gd" id="6_83u7c"]
-[ext_resource type="Script" uid="uid://cjln4aoplnw5f" path="res://Lungs/Scripts/airway_CO2_controller.gd" id="6_co2"]
-[ext_resource type="Script" uid="uid://cq2kiaab1b30t" path="res://Lungs/Scripts/compliance_controller.gd" id="6_comp_ctrl"]
 [ext_resource type="Script" uid="uid://vey0el4seeca" path="res://Lungs/Scripts/compliance_display.gd" id="6_comp_disp"]
-[ext_resource type="Script" uid="uid://cn84icwe1336h" path="res://Lungs/Scripts/airway_O2_controller.gd" id="6_o2"]
-[ext_resource type="Script" uid="uid://cvu76bhs3l82q" path="res://Lungs/Scripts/pulmonary_perfusion_controller.gd" id="6_perf"]
-[ext_resource type="Script" uid="uid://cqe622ro13ft2" path="res://Lungs/Scripts/pulmonary_vasc_CO2_controller.gd" id="6_vq"]
 [ext_resource type="Script" uid="uid://bo6uqiyg1gp1k" path="res://Lungs/Scripts/vq_gas_exchange_display.gd" id="6_vq_disp"]
 [ext_resource type="Texture2D" uid="uid://bfanntphf65bd" path="res://Lungs/Assets/r_lung.png" id="7_nbxdx"]
 [ext_resource type="Texture2D" uid="uid://d345v1fdmstr8" path="res://Lungs/Assets/l_lung.png" id="8_lhjoe"]
@@ -248,12 +243,57 @@ layout_mode = 2
 text = "Temp: 37.0 °C"
 label_settings = SubResource("LabelSettings_pli6c")
 
+[node name="Brain" type="Node" parent="."]
+
+[node name="Brainstem" type="Node" parent="Brain"]
+
+[node name="MedullaOblongata" type="Node" parent="Brain/Brainstem"]
+script = ExtResource("3_vqct2")
+
 [node name="Lungs" type="Node" parent="."]
 
-[node name="LungVolumesController" type="Node" parent="Lungs"]
-script = ExtResource("3_88omk")
+[node name="RightLung" type="Node" parent="Lungs"]
+script = ExtResource("4_base_lung")
 
-[node name="Display" type="Control" parent="Lungs/LungVolumesController"]
+[node name="RLungVisual" type="Node3D" parent="Lungs/RightLung"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -53.54373, 189.9455, 0.194)
+
+[node name="Sprites" type="Node3D" parent="Lungs/RightLung/RLungVisual"]
+
+[node name="Sprite" type="Sprite3D" parent="Lungs/RightLung/RLungVisual/Sprites"]
+transform = Transform3D(0.69813895, 0.1391731, 0, -0.09811704, 0.99026805, 0, 0, 0, 1, 25.051292, -49.4187, -21.42184)
+pixel_size = 0.1699
+texture = ExtResource("7_nbxdx")
+script = ExtResource("51_breath")
+
+[node name="LeftLung" type="Node" parent="Lungs"]
+script = ExtResource("4_base_lung")
+lobe_count = 2
+is_right_lung = false
+lung_name = "Left"
+
+[node name="LLungVisual" type="Node3D" parent="Lungs/LeftLung"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 39.66542, 189.9455, 0.194)
+
+[node name="Sprites" type="Node3D" parent="Lungs/LeftLung/LLungVisual"]
+
+[node name="Sprite" type="Sprite3D" parent="Lungs/LeftLung/LLungVisual/Sprites"]
+transform = Transform3D(0.79617554, -0.14988951, -1.6262248e-07, 0.11189525, 1.0665185, 2.6386042e-15, 1.2021916e-07, -2.2632689e-08, 1.077, -8.310959, -51.901733, -27.106167)
+modulate = Color(0.9810118, 0.87011725, 0.86180544, 1)
+pixel_size = 0.1699
+texture = ExtResource("8_lhjoe")
+script = ExtResource("51_breath")
+
+[node name="Sprite2" type="Sprite3D" parent="Lungs/LeftLung/LLungVisual/Sprites"]
+transform = Transform3D(0.79617554, -0.14988951, -1.6262248e-07, 0.11189525, 1.0665185, 2.6386042e-15, 1.2021916e-07, -2.2632689e-08, 1.077, -8.311001, -51.90184, -19.127)
+modulate = Color(0.9810118, 0.87011725, 0.86180544, 1)
+pixel_size = 0.1699
+texture = ExtResource("9_q4u61")
+script = ExtResource("51_breath")
+
+[node name="LungDisplays" type="Node" parent="Lungs"]
+
+[node name="LungVolumesDisplay" type="Control" parent="Lungs/LungDisplays"]
 layout_mode = 3
 anchors_preset = 0
 offset_left = -51.0
@@ -262,80 +302,32 @@ offset_right = 509.0
 offset_bottom = 483.0
 script = ExtResource("3_4n8vb")
 
-[node name="RespirationController" type="Node" parent="Lungs"]
-script = ExtResource("2_ihh6v")
-
-[node name="PressureDisplay" type="Control" parent="Lungs/RespirationController"]
+[node name="PressureDisplay" type="Control" parent="Lungs/LungDisplays"]
 layout_mode = 3
 anchors_preset = 0
-offset_left = -551.0
-offset_top = 448.0
-offset_right = 286.0
-offset_bottom = 1259.0
+offset_left = -550.0
+offset_top = 444.0
+offset_right = 287.0
+offset_bottom = 1255.0
 script = ExtResource("6_83u7c")
 
-[node name="ComplianceController" type="Node" parent="Lungs"]
-script = ExtResource("6_comp_ctrl")
-
-[node name="Display" type="Control" parent="Lungs/ComplianceController"]
+[node name="ComplianceDisplay" type="Control" parent="Lungs/LungDisplays"]
 layout_mode = 3
 anchors_preset = 0
-offset_left = 1358.0
-offset_top = 49.0
-offset_right = 1759.0
-offset_bottom = 438.0
+offset_left = 1506.0
+offset_top = 85.0
+offset_right = 1907.0
+offset_bottom = 474.0
 script = ExtResource("6_comp_disp")
 
-[node name="PulmonaryPerfusionController" type="Node" parent="Lungs"]
-script = ExtResource("6_perf")
-
-[node name="VQDisplay" type="Control" parent="Lungs/PulmonaryPerfusionController"]
+[node name="VQDisplay" type="Control" parent="Lungs/LungDisplays"]
 layout_mode = 3
 anchors_preset = 0
-offset_left = 1358.0
-offset_top = 460.0
-offset_right = 1858.0
-offset_bottom = 840.0
+offset_left = 1408.0
+offset_top = 481.0
+offset_right = 1908.0
+offset_bottom = 861.0
 script = ExtResource("6_vq_disp")
-
-[node name="AirwayO2Controller" type="Node" parent="Lungs"]
-script = ExtResource("6_o2")
-
-[node name="AirwayCO2Controller" type="Node" parent="Lungs"]
-script = ExtResource("6_co2")
-
-[node name="PulmonaryVascCO2Controller" type="Node" parent="Lungs"]
-script = ExtResource("6_vq")
-
-[node name="RLung" type="Node3D" parent="Lungs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -53.54373, 189.9455, 0.194)
-
-[node name="Sprites" type="Node3D" parent="Lungs/RLung"]
-
-[node name="Sprite" type="Sprite3D" parent="Lungs/RLung/Sprites"]
-transform = Transform3D(0.69813895, 0.1391731, 0, -0.09811704, 0.99026805, 0, 0, 0, 1, 25.051292, -49.4187, -21.42184)
-pixel_size = 0.1699
-texture = ExtResource("7_nbxdx")
-script = ExtResource("51_breath")
-
-[node name="LLung" type="Node3D" parent="Lungs"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 39.66542, 189.9455, 0.194)
-
-[node name="Sprites" type="Node3D" parent="Lungs/LLung"]
-
-[node name="Sprite" type="Sprite3D" parent="Lungs/LLung/Sprites"]
-transform = Transform3D(0.79617554, -0.14988951, -1.6262248e-07, 0.11189525, 1.0665185, 2.6386042e-15, 1.2021916e-07, -2.2632689e-08, 1.077, -8.310959, -51.901733, -27.106167)
-modulate = Color(0.9810118, 0.87011725, 0.86180544, 1)
-pixel_size = 0.1699
-texture = ExtResource("8_lhjoe")
-script = ExtResource("51_breath")
-
-[node name="Sprite2" type="Sprite3D" parent="Lungs/LLung/Sprites"]
-transform = Transform3D(0.79617554, -0.14988951, -1.6262248e-07, 0.11189525, 1.0665185, 2.6386042e-15, 1.2021916e-07, -2.2632689e-08, 1.077, -8.311001, -51.90184, -19.127)
-modulate = Color(0.9810118, 0.87011725, 0.86180544, 1)
-pixel_size = 0.1699
-texture = ExtResource("9_q4u61")
-script = ExtResource("51_breath")
 
 [node name="Heart" type="Node" parent="."]
 
